@@ -1,0 +1,26 @@
+{
+  "name": "RadioTelescope",
+  "short_name": "RadioTelescope",
+  "description": "Агрегатор онлайн-радиовещания",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1c1c1c",
+  "theme_color": "#1c1c1c",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
