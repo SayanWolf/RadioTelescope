@@ -531,6 +531,7 @@
 <div id="modalBackdrop">
   <div class="modal" id="modal"></div>
 </div>
+  <audio id="audioEl" preload="none" crossorigin="anonymous"></audio>
   <div class="player-inner" id="playerInner">
     <div class="player-main">
       <div class="viz">
@@ -810,26 +811,142 @@ const pPlay = $('#pPlay');
 const pEq = $('#pEq');
 const pFav = $('#pFav');
 
+const audio = $('#audioEl');
+/* ============== WEB AUDIO: ЭКВАЛАЙЗЕР + АНАЛИЗАТОР ============== */
+let audioCtx = null;
+let sourceNode = null;
+let eqFilters = [];
+let analyser = null;
+let vizData = null;
+let vizRaf = null;
+
+const EQ_FREQS = [60, 170, 310, 600, 1000, 3000, 6000, 12000];
+
+function initAudioGraph() {
+  if (audioCtx) return;
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    sourceNode = audioCtx.createMediaElementSource(audio);
+
+    // Цепочка фильтров
+    eqFilters = EQ_FREQS.map(freq => {
+      const f = audioCtx.createBiquadFilter();
+      f.type = 'peaking';
+      f.frequency.value = freq;
+      f.Q.value = 1;
+      f.gain.value = 0;
+      return f;
+    });
+
+    // Соединяем: source → f1 → f2 → ... → f8 → analyser → destination
+    let prev = sourceNode;
+    eqFilters.forEach(f => { prev.connect(f); prev = f; });
+
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 64; // 32 полосы
+    analyser.smoothingTimeConstant = 0.75;
+
+    prev.connect(analyser);
+    analyser.connect(audioCtx.destination);
+
+    vizData = new Uint8Array(analyser.frequencyBinCount);
+  } catch (e) {
+    console.warn('Web Audio не инициализирован:', e);
+  }
+}
+
+function applyEqGains() {
+  if (!eqFilters.length) return;
+  EQ_FREQS.forEach((freq, i) => {
+    const input = document.querySelector(`#eqSliders input[data-freq="${freq}"]`);
+    if (input) eqFilters[i].gain.value = parseInt(input.value);
+  });
+}
+
+/* Визуализация по AnalyserNode */
+function startViz() {
+  if (!analyser) return;
+  if (vizRaf) cancelAnimationFrame(vizRaf);
+
+  const bars = document.querySelectorAll('.viz i');
+  const total = bars.length;
+
+  function draw() {
+    analyser.getByteFrequencyData(vizData);
+    // Берём первые 16 полос из 32
+    for (let i = 0; i < total; i++) {
+      const v = vizData[i] || 0;
+      const h = Math.max(2, (v / 255) * 30);
+      bars[i].style.height = h + 'px';
+    }
+    vizRaf = requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function stopViz() {
+  if (vizRaf) { cancelAnimationFrame(vizRaf); vizRaf = null; }
+  document.querySelectorAll('.viz i').forEach(b => b.style.height = '2px');
+}
+
 function selectStation(s, el) {
   $$('.station').forEach(x => x.classList.remove('active'));
   el.classList.add('active');
   state.currentStation = s;
   pStation.textContent = s.n.toUpperCase();
   pMeta.textContent = (s.genre || '') + ' / ' + (s.countryName || '');
-  state.playing = true;
-  pPlay.textContent = '❚❚';
   player.classList.add('show');
-  document.body.classList.add('is-playing');
   updateFavButton();
-  startTick();
+
+  // Реальное воспроизведение
+  if (s.stream) {
+    audio.src = s.stream;
+    audio.volume = parseFloat($('#volume').value) / 100;
+    initAudioGraph();
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    audio.play()
+      .then((startViz();) => {
+        state.playing = true;
+        pPlay.textContent = '❚❚';
+        document.body.classList.add('is-playing');
+        startTick();
+      })
+      .catch(err => {
+        console.warn('Ошибка воспроизведения:', err);
+        state.playing = false;
+        pPlay.textContent = '▶';
+        document.body.classList.remove('is-playing');
+      });
+  } else {
+    // Если у станции нет потока — показываем, но не играем
+    state.playing = false;
+    pPlay.textContent = '▶';
+    document.body.classList.remove('is-playing');
+  }
 }
 
 function togglePlay() {
   if (!state.currentStation) return;
-  state.playing = !state.playing;
-  pPlay.textContent = state.playing ? '❚❚' : '▶';
-  if (state.playing) { document.body.classList.add('is-playing'); startTick(); }
-  else { document.body.classList.remove('is-playing'); stopTick(); }
+  if (state.playing) {
+    audio.pause();
+    state.playing = false;
+    pPlay.textContent = '▶';
+    document.body.classList.remove('is-playing');
+    stopTick();
+  } else {
+    if (audio.src) {
+    initAudioGraph();
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      audio.play()
+        .then((startViz();) => {
+          state.playing = true;
+          pPlay.textContent = '❚❚';
+          document.body.classList.add('is-playing');
+          startTick();
+        })
+        .catch(err => console.warn('Ошибка play:', err));
+    }
+  }
 }
 pPlay.addEventListener('click', togglePlay);
 pFav.addEventListener('click', () => { if (state.currentStation) toggleFavorite(state.currentStation.n); });
@@ -839,13 +956,16 @@ pEq.addEventListener('click', () => {
 });
 
 const vol = $('#volume');
-vol.addEventListener('input', () => {});
+vol.addEventListener('input', () => {
+  audio.volume = parseFloat(vol.value) / 100;
+});
 const eqValues = {};
 document.querySelectorAll('#eqSliders input').forEach(input => {
   const freq = parseInt(input.dataset.freq);
   eqValues[freq] = 0;
   input.addEventListener('input', () => {
     eqValues[freq] = parseInt(input.value);
+    applyEqGains();
   });
 });
 $('#eqReset').addEventListener('click', () => {
@@ -853,6 +973,7 @@ $('#eqReset').addEventListener('click', () => {
     input.value = 0;
     eqValues[parseInt(input.dataset.freq)] = 0;
   });
+  applyEqGains();   // ← добавьте эту строку
 });
 
 const modalBackdrop = $('#modalBackdrop');
@@ -985,6 +1106,9 @@ $('#exitBtn').addEventListener('click', () => {
   document.body.classList.remove('is-playing');
   const pl = document.getElementById('player');
   if (pl) pl.classList.remove('show');
+  audio.pause();
+  audio.src = '';
+  stopViz();
   try {
     if (navigator.app && navigator.app.exitApp) navigator.app.exitApp();
     else if (window.median && window.median.app && window.median.app.close) window.median.app.close();
