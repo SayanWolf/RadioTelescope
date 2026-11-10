@@ -52,7 +52,7 @@
   html, body {
     height: 100%; background: var(--bg-0); color: var(--text);
     font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
-    font-size: 14px; overflow: hidden;
+    font-size: 16px; overflow: hidden;
     transition: background .3s ease, color .3s ease;
   }
 
@@ -158,7 +158,7 @@
   .station.active .station-logo { border-color: var(--accent); }
   .station-info { flex: 1; min-width: 0; }
   .station-artist {
-    font-size: 10px; color: var(--accent); letter-spacing: 1px;
+    font-size: 11px; color: var(--accent); letter-spacing: 1px;
     margin-bottom: 1px; text-transform: uppercase;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
@@ -171,7 +171,7 @@
     width: 26px; height: 26px; flex: 0 0 26px;
     background: var(--bg-2); border: 1px solid var(--border);
     color: var(--text-dim);
-    display: flex; align-items: center; justify-content: center; font-size: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 11px;
     transition: all .15s ease;
   }
   .station:hover .station-play { color: var(--accent); border-color: var(--accent); }
@@ -185,9 +185,9 @@
     cursor: pointer; transition: background .15s ease;
   }
   .country:hover { background: var(--surface-hover); }
-  .country-flag { font-size: 18px; }
-  .country-name { flex: 1; font-size: 13px; font-weight: 600; }
-  .country-count { font-size: 11px; color: var(--text-dim); }
+  .country-flag { font-: 18px; }
+  .country-name { flex: 1; font-: 13px; font-weight: 600; }
+  .country-count { font-: 11px; color: var(--text-dim); }
   .country-chevron { transition: transform .25s ease; color: var(--text-dim); font-size: 10px; }
   .country-wrap.open .country-chevron { transform: rotate(180deg); color: var(--accent); }
   .country-stations { max-height: 0; overflow: hidden; transition: max-height .4s cubic-bezier(.22,1,.36,1); }
