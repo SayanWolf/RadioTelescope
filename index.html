@@ -905,11 +905,12 @@ function selectStation(s, el) {
     initAudioGraph();
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     audio.play()
-      .then((startViz();) => {
+       .then(() => {
         state.playing = true;
         pPlay.textContent = '❚❚';
         document.body.classList.add('is-playing');
         startTick();
+        startViz();
       })
       .catch(err => {
         console.warn('Ошибка воспроизведения:', err);
@@ -933,16 +934,18 @@ function togglePlay() {
     pPlay.textContent = '▶';
     document.body.classList.remove('is-playing');
     stopTick();
+    stopViz();                    // ← остановка визуализации
   } else {
     if (audio.src) {
-    initAudioGraph();
-    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      initAudioGraph();          // ← на всякий случай
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
       audio.play()
-        .then((startViz();) => {
+        .then(() => {            // ← без аргументов
           state.playing = true;
           pPlay.textContent = '❚❚';
           document.body.classList.add('is-playing');
           startTick();
+          startViz();            // ← внутри тела
         })
         .catch(err => console.warn('Ошибка play:', err));
     }
