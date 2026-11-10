@@ -225,28 +225,6 @@
     gap: 2px; padding: 3px 4px; overflow: hidden;
   }
   .viz i { width: 2px; background: var(--accent); height: 2px; transition: height .08s linear; }
-  body.is-playing .viz i { animation: vizPulse .8s ease-in-out infinite alternate; }
-  body.is-playing .viz i:nth-child(1) { animation-delay: 0s; }
-  body.is-playing .viz i:nth-child(2) { animation-delay: .08s; }
-  body.is-playing .viz i:nth-child(3) { animation-delay: .16s; }
-  body.is-playing .viz i:nth-child(4) { animation-delay: .24s; }
-  body.is-playing .viz i:nth-child(5) { animation-delay: .32s; }
-  body.is-playing .viz i:nth-child(6) { animation-delay: .4s; }
-  body.is-playing .viz i:nth-child(7) { animation-delay: .48s; }
-  body.is-playing .viz i:nth-child(8) { animation-delay: .56s; }
-  body.is-playing .viz i:nth-child(9) { animation-delay: .64s; }
-  body.is-playing .viz i:nth-child(10) { animation-delay: .72s; }
-  body.is-playing .viz i:nth-child(11) { animation-delay: .8s; }
-  body.is-playing .viz i:nth-child(12) { animation-delay: .88s; }
-  body.is-playing .viz i:nth-child(13) { animation-delay: .96s; }
-  body.is-playing .viz i:nth-child(14) { animation-delay: 1.04s; }
-  body.is-playing .viz i:nth-child(15) { animation-delay: 1.12s; }
-  body.is-playing .viz i:nth-child(16) { animation-delay: 1.2s; }
-  @keyframes vizPulse {
-    0% { height: 3px; opacity: .5; }
-    50% { height: 22px; opacity: 1; }
-    100% { height: 8px; opacity: .8; }
-  }
   .player-info { flex: 1; min-width: 0; }
   .player-station {
     font-size: 13px; font-weight: 600; color: var(--accent);
@@ -487,51 +465,6 @@
 </div>
 
 <div id="player">
-   <div class="player-inner" id="playerInner">
-    <div class="player-main">
-      <div class="viz">
-        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-      </div>
-      <div class="player-info">
-        <div class="player-station" id="pStation">— НЕТ СИГНАЛА —</div>
-        <div class="player-meta" id="pMeta">Выберите станцию</div>
-      </div>
-      <button class="fav-btn" id="pFav" title="В избранное">+</button>
-      <button class="play-btn" id="pPlay">▶</button>
-      <button class="eq-btn" id="pEq" title="Эквалайзер">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M4 20V10M8 20V4M12 20V14M16 20V8M20 20V12"/></svg>
-      </button>
-    </div>
-    <div class="player-volume">
-      <label>VOL</label>
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="square"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-      <input type="range" id="volume" min="0" max="100" value="70" />
-    </div>
-    <div class="eq-panel">
-      <div class="eq-header">
-        <span>ГРАФИЧЕСКИЙ ЭКВАЛАЙЗЕР</span>
-        <button class="eq-reset" id="eqReset">СБРОС</button>
-      </div>
-      <div class="eq-sliders" id="eqSliders">
-        <div class="eq-band"><span class="eq-label">60</span><input type="range" min="-12" max="12" value="0" data-freq="60"></div>
-        <div class="eq-band"><span class="eq-label">170</span><input type="range" min="-12" max="12" value="0" data-freq="170"></div>
-        <div class="eq-band"><span class="eq-label">310</span><input type="range" min="-12" max="12" value="0" data-freq="310"></div>
-        <div class="eq-band"><span class="eq-label">600</span><input type="range" min="-12" max="12" value="0" data-freq="600"></div>
-        <div class="eq-band"><span class="eq-label">1K</span><input type="range" min="-12" max="12" value="0" data-freq="1000"></div>
-        <div class="eq-band"><span class="eq-label">3K</span><input type="range" min="-12" max="12" value="0" data-freq="3000"></div>
-        <div class="eq-band"><span class="eq-label">6K</span><input type="range" min="-12" max="12" value="0" data-freq="6000"></div>
-        <div class="eq-band"><span class="eq-label">12K</span><input type="range" min="-12" max="12" value="0" data-freq="12000"></div>
-      </div>
-      <div class="eq-scale"><span>-12dB</span><span>0dB</span><span>+12dB</span></div>
-    </div>
-  </div>
-</div>
-
-<div id="modalBackdrop">
-  <div class="modal" id="modal"></div>
-</div>
-  <audio id="audioEl" preload="none" crossorigin="anonymous"></audio>
   <div class="player-inner" id="playerInner">
     <div class="player-main">
       <div class="viz">
@@ -576,23 +509,33 @@
 <div id="modalBackdrop">
   <div class="modal" id="modal"></div>
 </div>
+
+<audio id="audioEl" preload="none" crossorigin="anonymous"></audio>
 <script>
-/* ============== ДАННЫЕ (пусто — готовимся к реальным станциям) ============== */
 const ALL_STATIONS = [
-   {
+  {
     n: "Dub Ninja",
-    genre: "Dub techno and ambient for focus",
+    artist: "Dub Ninja",
+    genre: "Electronic",
+    country: "DE",
+    countryName: "Германия",
     stream: "https://dub.ninja/live"
   },
-   {
+  {
     n: "EBM Radio",
-    genre: "EBM, dark electro, industrial, synthpop and related electronic sounds from Germany",
+    artist: "EBM Radio",
+    genre: "Electronic",
+    country: "DE",
+    countryName: "Германия",
     stream: "http://www.ebm-radio.org:7000/hq"
   },
   {
     n: "Frisky Radio",
-    genre: "Underground electronic DJ mixes since 2008",
-    stream: "http://stream2.friskyradio.com/frisky_mp3_hi"
+    artist: "Frisky Radio",
+    genre: "Electronic",
+    country: "US",
+    countryName: "США",
+    stream: "https://stream.friskyradio.com/frisky_mp3_hi"
   }
 ];
 
@@ -708,7 +651,7 @@ function createStationCard(s) {
   el.dataset.name = s.n;
   el.innerHTML = `
     <div class="station-info">
-      <div class="station-artist">${s.artist}</div>
+      <div class="station-artist">${s.artist || ''}</div>
       <div class="station-name">${s.n}</div>
     </div>
     <div class="station-play">▶</div>`;
@@ -812,7 +755,7 @@ const pEq = $('#pEq');
 const pFav = $('#pFav');
 
 const audio = $('#audioEl');
-/* ============== WEB AUDIO: ЭКВАЛАЙЗЕР + АНАЛИЗАТОР ============== */
+
 let audioCtx = null;
 let sourceNode = null;
 let eqFilters = [];
@@ -828,7 +771,6 @@ function initAudioGraph() {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     sourceNode = audioCtx.createMediaElementSource(audio);
 
-    // Цепочка фильтров
     eqFilters = EQ_FREQS.map(freq => {
       const f = audioCtx.createBiquadFilter();
       f.type = 'peaking';
@@ -838,12 +780,11 @@ function initAudioGraph() {
       return f;
     });
 
-    // Соединяем: source → f1 → f2 → ... → f8 → analyser → destination
     let prev = sourceNode;
     eqFilters.forEach(f => { prev.connect(f); prev = f; });
 
     analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 64; // 32 полосы
+    analyser.fftSize = 64;
     analyser.smoothingTimeConstant = 0.75;
 
     prev.connect(analyser);
@@ -863,7 +804,6 @@ function applyEqGains() {
   });
 }
 
-/* Визуализация по AnalyserNode */
 function startViz() {
   if (!analyser) return;
   if (vizRaf) cancelAnimationFrame(vizRaf);
@@ -873,7 +813,6 @@ function startViz() {
 
   function draw() {
     analyser.getByteFrequencyData(vizData);
-    // Берём первые 16 полос из 32
     for (let i = 0; i < total; i++) {
       const v = vizData[i] || 0;
       const h = Math.max(2, (v / 255) * 30);
@@ -898,14 +837,13 @@ function selectStation(s, el) {
   player.classList.add('show');
   updateFavButton();
 
-  // Реальное воспроизведение
   if (s.stream) {
     audio.src = s.stream;
     audio.volume = parseFloat($('#volume').value) / 100;
     initAudioGraph();
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     audio.play()
-       .then(() => {
+      .then(() => {
         state.playing = true;
         pPlay.textContent = '❚❚';
         document.body.classList.add('is-playing');
@@ -919,7 +857,6 @@ function selectStation(s, el) {
         document.body.classList.remove('is-playing');
       });
   } else {
-    // Если у станции нет потока — показываем, но не играем
     state.playing = false;
     pPlay.textContent = '▶';
     document.body.classList.remove('is-playing');
@@ -934,23 +871,24 @@ function togglePlay() {
     pPlay.textContent = '▶';
     document.body.classList.remove('is-playing');
     stopTick();
-    stopViz();                    // ← остановка визуализации
+    stopViz();
   } else {
     if (audio.src) {
-      initAudioGraph();          // ← на всякий случай
+      initAudioGraph();
       if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
       audio.play()
-        .then(() => {            // ← без аргументов
+        .then(() => {
           state.playing = true;
           pPlay.textContent = '❚❚';
           document.body.classList.add('is-playing');
           startTick();
-          startViz();            // ← внутри тела
+          startViz();
         })
         .catch(err => console.warn('Ошибка play:', err));
     }
   }
 }
+
 pPlay.addEventListener('click', togglePlay);
 pFav.addEventListener('click', () => { if (state.currentStation) toggleFavorite(state.currentStation.n); });
 pEq.addEventListener('click', () => {
@@ -962,6 +900,7 @@ const vol = $('#volume');
 vol.addEventListener('input', () => {
   audio.volume = parseFloat(vol.value) / 100;
 });
+
 const eqValues = {};
 document.querySelectorAll('#eqSliders input').forEach(input => {
   const freq = parseInt(input.dataset.freq);
@@ -976,7 +915,7 @@ $('#eqReset').addEventListener('click', () => {
     input.value = 0;
     eqValues[parseInt(input.dataset.freq)] = 0;
   });
-  applyEqGains();   // ← добавьте эту строку
+  applyEqGains();
 });
 
 const modalBackdrop = $('#modalBackdrop');
@@ -1101,17 +1040,16 @@ function renderStats() {
 $('#openStatsBtn').addEventListener('click', () => { renderStats(); statsPage.classList.add('show'); });
 $('#statsClose').addEventListener('click', () => { statsPage.classList.remove('show'); });
 
-/* Кнопка выхода */
 $('#exitBtn').addEventListener('click', () => {
   state.playing = false;
   state.currentStation = null;
   stopTick();
+  stopViz();
   document.body.classList.remove('is-playing');
   const pl = document.getElementById('player');
   if (pl) pl.classList.remove('show');
   audio.pause();
   audio.src = '';
-  stopViz();
   try {
     if (navigator.app && navigator.app.exitApp) navigator.app.exitApp();
     else if (window.median && window.median.app && window.median.app.close) window.median.app.close();
