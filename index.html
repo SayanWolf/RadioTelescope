@@ -32,6 +32,7 @@
     --accent-2: #7C3AED;
     --text: #e8e8e8;
     --text-dim: #8a8a8a;
+    --danger: #e03131;
     --inset: inset 1px 1px 0 #000, inset -1px -1px 0 #5a5a5a;
   }
   body[data-theme="black"] {
@@ -109,7 +110,6 @@
     color: var(--accent); flex: 1;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .topbar h1 svg { width: 18px; height: 18px; vertical-align: middle; margin-right: 4px; }
   .topbar-btn {
     padding: 6px 10px; font-family: 'IBM Plex Mono', monospace;
     font-size: 11px; letter-spacing: 1px;
@@ -117,6 +117,23 @@
     color: var(--text-dim); cursor: pointer; transition: all .15s ease; white-space: nowrap;
   }
   .topbar-btn:hover { color: var(--text); border-color: var(--border-strong); }
+
+  /* Кнопка выхода — красный кругляш питания (левый верхний угол) */
+  .exit-btn {
+    width: 32px; height: 32px; flex: 0 0 32px;
+    border-radius: 50%;
+    background: var(--bg-2);
+    border: 1px solid var(--danger);
+    box-shadow: var(--inset);
+    color: var(--danger);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s ease;
+  }
+  .exit-btn:hover { background: var(--danger); color: #fff; }
+  .exit-btn:active { box-shadow: inset 1px 1px 0 #000; }
+  .exit-btn svg { width: 16px; height: 16px; }
+
   .chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
   .chips::-webkit-scrollbar { display: none; }
   .chip {
@@ -140,9 +157,9 @@
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 4px; }
   }
 
-  /* СТАНЦИЯ */
+  /* СТАНЦИЯ (без иконки, без now playing) */
   .station {
-    display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
     background: var(--surface); border: 1px solid var(--border);
     cursor: pointer;
     transition: background .15s ease, opacity .3s ease, filter .3s ease;
@@ -150,23 +167,16 @@
   .station:hover { background: var(--surface-hover); }
   .station.active { background: var(--bg-2); border-color: var(--accent); }
   body.is-playing .station:not(.active) { opacity: 0.35; filter: grayscale(0.8); }
-  .station-logo {
-    width: 32px; height: 32px; flex: 0 0 32px;
-    background: var(--bg-0); border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center; font-size: 16px;
-  }
-  .station.active .station-logo { border-color: var(--accent); }
   .station-info { flex: 1; min-width: 0; }
   .station-artist {
     font-size: 11px; color: var(--accent); letter-spacing: 1px;
     margin-bottom: 1px; text-transform: uppercase;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .station-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .now-playing { font-size: 11px; color: var(--text-dim); white-space: nowrap; overflow: hidden; position: relative; }
-  .now-playing span { display: inline-block; }
-  .now-playing.scrolling span { animation: marquee 10s linear infinite; padding-right: 40px; }
-  @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  .station-name {
+    font-size: 13px; font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
   .station-play {
     width: 26px; height: 26px; flex: 0 0 26px;
     background: var(--bg-2); border: 1px solid var(--border);
@@ -185,9 +195,9 @@
     cursor: pointer; transition: background .15s ease;
   }
   .country:hover { background: var(--surface-hover); }
-  .country-flag { font-: 18px; }
-  .country-name { flex: 1; font-: 13px; font-weight: 600; }
-  .country-count { font-: 11px; color: var(--text-dim); }
+  .country-flag { font-size: 18px; }
+  .country-name { flex: 1; font-size: 13px; font-weight: 600; }
+  .country-count { font-size: 11px; color: var(--text-dim); }
   .country-chevron { transition: transform .25s ease; color: var(--text-dim); font-size: 10px; }
   .country-wrap.open .country-chevron { transform: rotate(180deg); color: var(--accent); }
   .country-stations { max-height: 0; overflow: hidden; transition: max-height .4s cubic-bezier(.22,1,.36,1); }
@@ -197,7 +207,7 @@
     background: var(--bg-0); border-top: 1px solid var(--border);
   }
 
-  /* ПЛЕЕР */
+  /* ПЛЕЕР (без now playing) */
   #player {
     position: fixed; left: 0; right: 0; bottom: 0;
     transform: translateY(110%);
@@ -246,13 +256,16 @@
   }
   .player-info { flex: 1; min-width: 0; }
   .player-station {
-    font-size: 12px; font-weight: 600; color: var(--accent);
-    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px;
+    font-size: 13px; font-weight: 600; color: var(--accent);
+    letter-spacing: 1px; text-transform: uppercase;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-bottom: 2px;
+  }
+  .player-meta {
+    font-size: 11px; color: var(--text-dim);
+    letter-spacing: 1px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .player-track { font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; position: relative; }
-  .player-track span { display: inline-block; }
-  .player-track.scrolling span { animation: marquee 12s linear infinite; padding-right: 40px; }
   .play-btn, .fav-btn, .eq-btn {
     width: 38px; height: 34px; flex: 0 0 38px;
     background: var(--bg-2); border: 1px solid var(--border-strong); box-shadow: var(--inset);
@@ -423,12 +436,13 @@
 
   @media (max-width: 400px) {
     .viz { width: 44px; flex: 0 0 44px; }
-    .player-station { font-size: 11px; }
-    .player-track { font-size: 11px; }
+    .player-station { font-size: 12px; }
+    .player-meta { font-size: 10px; }
     .eq-btn { flex: 0 0 38px; }
     .eq-band .eq-label { font-size: 8px; }
     .topbar h1 { font-size: 16px; letter-spacing: 2px; }
     .topbar-btn { font-size: 10px; padding: 5px 8px; }
+    .exit-btn { width: 28px; height: 28px; flex: 0 0 28px; }
   }
 </style>
 </head>
@@ -456,10 +470,13 @@
 <div id="app">
   <header>
     <div class="topbar">
-      <h1>
-        <svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="40" stroke="var(--accent)" stroke-width="6"/><circle cx="50" cy="50" r="12" fill="var(--accent)"/></svg>
-        RADIOTELESCOPE
-      </h1>
+      <button class="exit-btn" id="exitBtn" title="Выход">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
+          <line x1="12" y1="2" x2="12" y2="12"/>
+        </svg>
+      </button>
+      <h1>RADIOTELESCOPE</h1>
       <button class="topbar-btn" id="openSettingsBtn">НАСТРОЙКИ</button>
       <button class="topbar-btn" id="openStatsBtn">СТАТИСТИКА</button>
     </div>
@@ -478,528 +495,4 @@
     <button class="stats-close" id="statsClose">НАЗАД</button>
   </div>
   <div class="stats-body" id="statsBody">
-    <div class="stats-empty">— НЕТ ДАННЫХ —</div>
-  </div>
-</div>
-
-<!-- ПЛЕЕР -->
-<div id="player">
-  <div class="player-inner" id="playerInner">
-    <div class="player-main">
-      <div class="viz">
-        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-      </div>
-      <div class="player-info">
-        <div class="player-station" id="pStation">— НЕТ СИГНАЛА —</div>
-        <div class="player-track" id="pTrack"><span>Выберите станцию</span></div>
-      </div>
-      <button class="fav-btn" id="pFav" title="В избранное">+</button>
-      <button class="play-btn" id="pPlay">▶</button>
-      <button class="eq-btn" id="pEq" title="Эквалайзер">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M4 20V10M8 20V4M12 20V14M16 20V8M20 20V12"/></svg>
-      </button>
-    </div>
-    <div class="player-volume">
-      <label>VOL</label>
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="square"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-      <input type="range" id="volume" min="0" max="100" value="70" />
-    </div>
-    <div class="eq-panel">
-      <div class="eq-header">
-        <span>ГРАФИЧЕСКИЙ ЭКВАЛАЙЗЕР</span>
-        <button class="eq-reset" id="eqReset">СБРОС</button>
-      </div>
-      <div class="eq-sliders" id="eqSliders">
-        <div class="eq-band"><span class="eq-label">60</span><input type="range" min="-12" max="12" value="0" data-freq="60"></div>
-        <div class="eq-band"><span class="eq-label">170</span><input type="range" min="-12" max="12" value="0" data-freq="170"></div>
-        <div class="eq-band"><span class="eq-label">310</span><input type="range" min="-12" max="12" value="0" data-freq="310"></div>
-        <div class="eq-band"><span class="eq-label">600</span><input type="range" min="-12" max="12" value="0" data-freq="600"></div>
-        <div class="eq-band"><span class="eq-label">1K</span><input type="range" min="-12" max="12" value="0" data-freq="1000"></div>
-        <div class="eq-band"><span class="eq-label">3K</span><input type="range" min="-12" max="12" value="0" data-freq="3000"></div>
-        <div class="eq-band"><span class="eq-label">6K</span><input type="range" min="-12" max="12" value="0" data-freq="6000"></div>
-        <div class="eq-band"><span class="eq-label">12K</span><input type="range" min="-12" max="12" value="0" data-freq="12000"></div>
-      </div>
-      <div class="eq-scale"><span>-12dB</span><span>0dB</span><span>+12dB</span></div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL -->
-<div id="modalBackdrop">
-  <div class="modal" id="modal"></div>
-</div>
-
-<script>
-/* ============== ДАННЫЕ ============== */
-const ALL_STATIONS = [
-  {n:"Rock Orbit", artist:"Led Zeppelin", track:"Stairway to Heaven", genre:"Rock", c:"#EF4444", e:"♫", country:"US", countryName:"США"},
-  {n:"Cosmic Rock", artist:"Pink Floyd", track:"Comfortably Numb", genre:"Rock", c:"#F97316", e:"♫", country:"GB", countryName:"Великобритания"},
-  {n:"Hard Signal", artist:"Metallica", track:"Enter Sandman", genre:"Rock", c:"#DC2626", e:"♫", country:"US", countryName:"США"},
-  {n:"Kremlin Rock", artist:"Кино", track:"Группа крови", genre:"Rock", c:"#DC2626", e:"♫", country:"RU", countryName:"Россия"},
-  {n:"Berlin Rock", artist:"Rammstein", track:"Mutter", genre:"Rock", c:"#EF4444", e:"♫", country:"DE", countryName:"Германия"},
-  {n:"Tokyo Rock", artist:"X Japan", track:"Kurenai", genre:"Rock", c:"#F97316", e:"♫", country:"JP", countryName:"Япония"},
-  {n:"Aussie Rock", artist:"AC/DC", track:"Thunderstruck", genre:"Rock", c:"#DC2626", e:"♫", country:"AU", countryName:"Австралия"},
-  {n:"Paris Rock", artist:"Oasis", track:"Wonderwall", genre:"Rock", c:"#EF4444", e:"♫", country:"FR", countryName:"Франция"},
-  {n:"Pop Nova", artist:"The Weeknd", track:"Blinding Lights", genre:"Pop", c:"#EC4899", e:"♪", country:"US", countryName:"США"},
-  {n:"Star Pop", artist:"Dua Lipa", track:"Levitating", genre:"Pop", c:"#8B5CF6", e:"♪", country:"GB", countryName:"Великобритания"},
-  {n:"Moscow Pop", artist:"Zivert", track:"Позвони", genre:"Pop", c:"#EC4899", e:"♪", country:"RU", countryName:"Россия"},
-  {n:"K-Pop Signal", artist:"BTS", track:"Dynamite", genre:"Pop", c:"#F472B6", e:"♪", country:"KR", countryName:"Южная Корея"},
-  {n:"Tokyo Pop", artist:"Mariya Takeuchi", track:"Plastic Love", genre:"Pop", c:"#EC4899", e:"♪", country:"JP", countryName:"Япония"},
-  {n:"Paris Pop", artist:"Indila", track:"Dernière Danse", genre:"Pop", c:"#8B5CF6", e:"♪", country:"FR", countryName:"Франция"},
-  {n:"Jazz Lounge 88", artist:"Miles Davis", track:"Blue in Green", genre:"Jazz", c:"#F59E0B", e:"♩", country:"US", countryName:"США"},
-  {n:"Lunar Jazz", artist:"Dave Brubeck", track:"Take Five", genre:"Jazz", c:"#EAB308", e:"♩", country:"US", countryName:"США"},
-  {n:"London Jazz", artist:"Miles Davis", track:"So What", genre:"Jazz", c:"#F59E0B", e:"♩", country:"GB", countryName:"Великобритания"},
-  {n:"Moscow Jazz", artist:"Various", track:"Осенние листья", genre:"Jazz", c:"#EAB308", e:"♩", country:"RU", countryName:"Россия"},
-  {n:"Rio Jazz", artist:"João Gilberto", track:"The Girl from Ipanema", genre:"Jazz", c:"#F59E0B", e:"♩", country:"BR", countryName:"Бразилия"},
-  {n:"Tokyo Jazz", artist:"Various", track:"Autumn Leaves", genre:"Jazz", c:"#EAB308", e:"♩", country:"JP", countryName:"Япония"},
-  {n:"Electro Pulse", artist:"deadmau5", track:"Strobe (Extended)", genre:"Electronic", c:"#3B82F6", e:"♬", country:"CA", countryName:"Канада"},
-  {n:"Nova FM", artist:"Synthwave Collective", track:"Midnight Drive", genre:"Electronic", c:"#00E5FF", e:"♬", country:"US", countryName:"США"},
-  {n:"Berlin Techno", artist:"Aphex Twin", track:"Windowlicker", genre:"Electronic", c:"#3B82F6", e:"♬", country:"DE", countryName:"Германия"},
-  {n:"London House", artist:"Fisher", track:"Losing It", genre:"Electronic", c:"#6366F1", e:"♬", country:"GB", countryName:"Великобритания"},
-  {n:"Amsterdam Trance", artist:"Tiësto", track:"Adagio for Strings", genre:"Electronic", c:"#00E5FF", e:"♬", country:"NL", countryName:"Нидерланды"},
-  {n:"Moscow Electro", artist:"Скриптонит", track:"Первый", genre:"Electronic", c:"#3B82F6", e:"♬", country:"RU", countryName:"Россия"},
-  {n:"Ibiza Beats", artist:"Avicii", track:"Levels", genre:"Electronic", c:"#8B5CF6", e:"♬", country:"ES", countryName:"Испания"},
-  {n:"Classic Nova", artist:"Beethoven", track:"Moonlight Sonata", genre:"Classical", c:"#10B981", e:"𝄞", country:"DE", countryName:"Германия"},
-  {n:"Aurora Classical", artist:"Debussy", track:"Clair de Lune", genre:"Classical", c:"#14B8A6", e:"𝄞", country:"FR", countryName:"Франция"},
-  {n:"Vienna Strings", artist:"Mozart", track:"Eine kleine Nachtmusik", genre:"Classical", c:"#10B981", e:"𝄞", country:"AT", countryName:"Австрия"},
-  {n:"Moscow Symphony", artist:"Чайковский", track:"Лебединое озеро", genre:"Classical", c:"#14B8A6", e:"𝄞", country:"RU", countryName:"Россия"},
-  {n:"Milano Opera", artist:"Puccini", track:"Nessun Dorma", genre:"Classical", c:"#10B981", e:"𝄞", country:"IT", countryName:"Италия"},
-  {n:"Street Orbit", artist:"Eminem", track:"Lose Yourself", genre:"Hip-Hop", c:"#F43F5E", e:"♫", country:"US", countryName:"США"},
-  {n:"Brooklyn Beats", artist:"Notorious B.I.G.", track:"Juicy", genre:"Hip-Hop", c:"#DC2626", e:"♫", country:"US", countryName:"США"},
-  {n:"London Grime", artist:"Skepta", track:"Shutdown", genre:"Hip-Hop", c:"#F43F5E", e:"♫", country:"GB", countryName:"Великобритания"},
-  {n:"Moscow Rap", artist:"Моргенштерн", track:"Cadillac", genre:"Hip-Hop", c:"#DC2626", e:"♫", country:"RU", countryName:"Россия"},
-  {n:"ATL Trap", artist:"Travis Scott", track:"SICKO MODE", genre:"Hip-Hop", c:"#F43F5E", e:"♫", country:"US", countryName:"США"},
-];
-
-const COUNTRIES = [
-  {code:"US", name:"США", flag:"🇺🇸"},
-  {code:"GB", name:"Великобритания", flag:"🇬🇧"},
-  {code:"RU", name:"Россия", flag:"🇷🇺"},
-  {code:"DE", name:"Германия", flag:"🇩🇪"},
-  {code:"FR", name:"Франция", flag:"🇫🇷"},
-  {code:"JP", name:"Япония", flag:"🇯🇵"},
-  {code:"BR", name:"Бразилия", flag:"🇧🇷"},
-  {code:"KR", name:"Южная Корея", flag:"🇰🇷"},
-  {code:"CA", name:"Канада", flag:"🇨🇦"},
-  {code:"AU", name:"Австралия", flag:"🇦🇺"},
-  {code:"NL", name:"Нидерланды", flag:"🇳🇱"},
-  {code:"ES", name:"Испания", flag:"🇪🇸"},
-  {code:"IT", name:"Италия", flag:"🇮🇹"},
-  {code:"AT", name:"Австрия", flag:"🇦🇹"},
-  {code:"SE", name:"Швеция", flag:"🇸🇪"},
-  {code:"NO", name:"Норвегия", flag:"🇳🇴"},
-  {code:"IN", name:"Индия", flag:"🇮🇳"},
-  {code:"CN", name:"Китай", flag:"🇨🇳"},
-  {code:"MX", name:"Мексика", flag:"🇲🇽"},
-  {code:"AR", name:"Аргентина", flag:"🇦🇷"},
-  {code:"PL", name:"Польша", flag:"🇵🇱"},
-  {code:"UA", name:"Украина", flag:"🇺🇦"},
-  {code:"TR", name:"Турция", flag:"🇹🇷"},
-  {code:"ZA", name:"Южная Африка", flag:"🇿🇦"},
-];
-
-const GENRES = ["Rock","Pop","Jazz","Electronic","Classical","Hip-Hop"];
-const CATEGORIES = ["Все", ...GENRES, "Избранное", "Дискография", "География"];
-
-/* ============== СОСТОЯНИЕ ============== */
-const state = {
-  activeCat: "Все",
-  currentStation: null,
-  playing: false,
-  theme: localStorage.getItem('rt_theme') || 'dark',
-  accent: localStorage.getItem('rt_accent') || '#00E5FF',
-  accent2: localStorage.getItem('rt_accent2') || '#7C3AED',
-  favorites: JSON.parse(localStorage.getItem('rt_favorites') || '[]'),
-  stats: JSON.parse(localStorage.getItem('rt_stats') || '{"genres":{},"countries":{},"artists":{}}'),
-  tickInterval: null,
-};
-
-const $ = (s) => document.querySelector(s);
-const $$ = (s) => document.querySelectorAll(s);
-
-function setMarquee(el, text) {
-  el.classList.remove('scrolling');
-  const span = el.querySelector('span');
-  span.textContent = text;
-  if (span.scrollWidth > el.clientWidth) {
-    el.classList.add('scrolling');
-    span.innerHTML = text + '&nbsp;&nbsp;&nbsp;&nbsp;' + text;
-  }
-}
-
-function applyTheme() {
-  document.body.dataset.theme = state.theme;
-  document.documentElement.style.setProperty('--accent', state.accent);
-  document.documentElement.style.setProperty('--accent-2', state.accent2);
-  localStorage.setItem('rt_theme', state.theme);
-  localStorage.setItem('rt_accent', state.accent);
-  localStorage.setItem('rt_accent2', state.accent2);
-}
-
-function getStationsByTag(tag) {
-  if (tag === "Все") return ALL_STATIONS;
-  return ALL_STATIONS.filter(s => s.genre === tag);
-}
-function getStationsByCountry(code) { return ALL_STATIONS.filter(s => s.country === code); }
-function getFavoriteStations() { return ALL_STATIONS.filter(s => state.favorites.includes(s.n)); }
-function getArtists() {
-  const map = new Map();
-  ALL_STATIONS.forEach(s => {
-    if (!map.has(s.artist)) map.set(s.artist, []);
-    map.get(s.artist).push(s);
-  });
-  return Array.from(map.entries()).sort((a,b) => a[0].localeCompare(b[0]));
-}
-
-/* ============== ИЗБРАННОЕ ============== */
-function saveFavorites() { localStorage.setItem('rt_favorites', JSON.stringify(state.favorites)); }
-function toggleFavorite(name) {
-  const idx = state.favorites.indexOf(name);
-  if (idx === -1) state.favorites.push(name);
-  else state.favorites.splice(idx, 1);
-  saveFavorites();
-  updateFavButton();
-  if (state.activeCat === "Избранное") render();
-}
-function updateFavButton() {
-  const btn = $('#pFav');
-  if (state.currentStation && state.favorites.includes(state.currentStation.n)) {
-    btn.classList.add('on'); btn.textContent = '✓';
-  } else {
-    btn.classList.remove('on'); btn.textContent = '+';
-  }
-}
-
-/* ============== СТАТИСТИКА ============== */
-function saveStats() { localStorage.setItem('rt_stats', JSON.stringify(state.stats)); }
-function tickStats() {
-  if (!state.playing || !state.currentStation) return;
-  const s = state.currentStation;
-  state.stats.genres[s.genre] = (state.stats.genres[s.genre] || 0) + 1;
-  state.stats.countries[s.countryName] = (state.stats.countries[s.countryName] || 0) + 1;
-  state.stats.artists[s.artist] = (state.stats.artists[s.artist] || 0) + 1;
-  saveStats();
-}
-function startTick() { stopTick(); state.tickInterval = setInterval(tickStats, 1000); }
-function stopTick() { if (state.tickInterval) { clearInterval(state.tickInterval); state.tickInterval = null; } }
-function formatTime(sec) {
-  if (sec < 60) return sec + 'с';
-  const m = Math.floor(sec / 60);
-  if (m < 60) return m + 'м ' + (sec % 60) + 'с';
-  const h = Math.floor(m / 60);
-  return h + 'ч ' + (m % 60) + 'м';
-}
-
-/* ============== РЕНДЕР ============== */
-function createStationCard(s) {
-  const el = document.createElement('div');
-  el.className = 'station';
-  el.dataset.name = s.n;
-  el.innerHTML = `
-    <div class="station-logo" style="color:${s.c}">${s.e}</div>
-    <div class="station-info">
-      <div class="station-artist">${s.artist}</div>
-      <div class="station-name">${s.n}</div>
-      <div class="now-playing"><span>${s.track}</span></div>
-    </div>
-    <div class="station-play">▶</div>`;
-  el.addEventListener('click', () => selectStation(s, el));
-  requestAnimationFrame(() => {
-    const np = el.querySelector('.now-playing');
-    const span = np.querySelector('span');
-    if (span.scrollWidth > np.clientWidth) {
-      np.classList.add('scrolling');
-      span.innerHTML = span.textContent + '&nbsp;&nbsp;&nbsp;&nbsp;' + span.textContent;
-    }
-  });
-  return el;
-}
-
-const grid = $('#grid');
-
-function renderStations(list, emptyMsg) {
-  grid.innerHTML = '';
-  if (!list.length) {
-    grid.innerHTML = `<div style="text-align:center;color:var(--text-dim);padding:30px;font-size:12px;letter-spacing:1px;">— ${emptyMsg || 'СТАНЦИИ НЕ НАЙДЕНЫ'} —</div>`;
-    return;
-  }
-  list.forEach(s => grid.appendChild(createStationCard(s)));
-}
-
-function renderCountries() {
-  grid.innerHTML = '';
-  COUNTRIES.forEach(c => {
-    const stations = getStationsByCountry(c.code);
-    const wrap = document.createElement('div');
-    wrap.className = 'country-wrap';
-    const header = document.createElement('div');
-    header.className = 'country';
-    header.innerHTML = `
-      <div class="country-flag">${c.flag}</div>
-      <div class="country-name">${c.name}</div>
-      <div class="country-count">${String(stations.length).padStart(2,'0')}</div>
-      <div class="country-chevron">▼</div>`;
-    const listEl = document.createElement('div');
-    listEl.className = 'country-stations';
-    const inner = document.createElement('div');
-    inner.className = 'country-stations-inner';
-    if (stations.length) stations.forEach(s => inner.appendChild(createStationCard(s)));
-    else inner.innerHTML = '<div style="padding:10px;font-size:11px;color:var(--text-dim);letter-spacing:1px;">— НЕТ ДОСТУПНЫХ СТАНЦИЙ —</div>';
-    listEl.appendChild(inner);
-    header.addEventListener('click', () => wrap.classList.toggle('open'));
-    wrap.appendChild(header); wrap.appendChild(listEl);
-    grid.appendChild(wrap);
-  });
-}
-
-function renderArtists() {
-  grid.innerHTML = '';
-  const artists = getArtists();
-  if (!artists.length) {
-    grid.innerHTML = '<div style="text-align:center;color:var(--text-dim);padding:30px;font-size:12px;letter-spacing:1px;">— НЕТ ИСПОЛНИТЕЛЕЙ —</div>';
-    return;
-  }
-  artists.forEach(([name, stations]) => {
-    const wrap = document.createElement('div');
-    wrap.className = 'country-wrap';
-    const header = document.createElement('div');
-    header.className = 'country';
-    header.innerHTML = `
-      <div class="country-flag">♪</div>
-      <div class="country-name">${name}</div>
-      <div class="country-count">${String(stations.length).padStart(2,'0')}</div>
-      <div class="country-chevron">▼</div>`;
-    const listEl = document.createElement('div');
-    listEl.className = 'country-stations';
-    const inner = document.createElement('div');
-    inner.className = 'country-stations-inner';
-    stations.forEach(s => inner.appendChild(createStationCard(s)));
-    listEl.appendChild(inner);
-    header.addEventListener('click', () => wrap.classList.toggle('open'));
-    wrap.appendChild(header); wrap.appendChild(listEl);
-    grid.appendChild(wrap);
-  });
-}
-
-function render() {
-  if (state.activeCat === "География") renderCountries();
-  else if (state.activeCat === "Дискография") renderArtists();
-  else if (state.activeCat === "Избранное") renderStations(getFavoriteStations(), 'СПИСОК ПУСТ — ДОБАВЬТЕ СТАНЦИИ ПЛЮСИКОМ');
-  else renderStations(getStationsByTag(state.activeCat));
-}
-
-/* ============== ЧИПЫ ============== */
-const chipsEl = $('#chips');
-CATEGORIES.forEach(c => {
-  const b = document.createElement('button');
-  b.className = 'chip' + (c === state.activeCat ? ' active' : '');
-  b.textContent = c.toUpperCase();
-  b.addEventListener('click', () => {
-    $$('.chip').forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    state.activeCat = c;
-    render();
-  });
-  chipsEl.appendChild(b);
-});
-
-/* ============== ПЛЕЕР ============== */
-const player = $('#player');
-const playerInner = $('#playerInner');
-const pStation = $('#pStation');
-const pTrack = $('#pTrack');
-const pPlay = $('#pPlay');
-const pEq = $('#pEq');
-const pFav = $('#pFav');
-
-function selectStation(s, el) {
-  $$('.station').forEach(x => x.classList.remove('active'));
-  el.classList.add('active');
-  state.currentStation = s;
-  pStation.textContent = s.n.toUpperCase() + ' / ' + s.artist.toUpperCase();
-  setMarquee(pTrack, s.track);
-  state.playing = true;
-  pPlay.textContent = '❚❚';
-  player.classList.add('show');
-  document.body.classList.add('is-playing');
-  updateFavButton();
-  startTick();
-}
-
-function togglePlay() {
-  if (!state.currentStation) return;
-  state.playing = !state.playing;
-  pPlay.textContent = state.playing ? '❚❚' : '▶';
-  if (state.playing) { document.body.classList.add('is-playing'); startTick(); }
-  else { document.body.classList.remove('is-playing'); stopTick(); }
-}
-pPlay.addEventListener('click', togglePlay);
-pFav.addEventListener('click', () => { if (state.currentStation) toggleFavorite(state.currentStation.n); });
-pEq.addEventListener('click', () => {
-  playerInner.classList.toggle('eq-open');
-  pEq.classList.toggle('on');
-});
-
-/* ============== ГРОМКОСТЬ / ЭКВАЛАЙЗЕР ============== */
-const vol = $('#volume');
-vol.addEventListener('input', () => {});
-const eqValues = {};
-document.querySelectorAll('#eqSliders input').forEach(input => {
-  const freq = parseInt(input.dataset.freq);
-  eqValues[freq] = 0;
-  input.addEventListener('input', () => {
-    eqValues[freq] = parseInt(input.value);
-  });
-});
-$('#eqReset').addEventListener('click', () => {
-  document.querySelectorAll('#eqSliders input').forEach(input => {
-    input.value = 0;
-    eqValues[parseInt(input.dataset.freq)] = 0;
-  });
-});
-
-/* ============== МОДАЛКИ ============== */
-const modalBackdrop = $('#modalBackdrop');
-const modal = $('#modal');
-
-const modalContent = {
-  about: {
-    title: "О ПРИЛОЖЕНИИ",
-    html: `
-      <p>Приложение создано пользователем <b>SayanWolf</b> с помощью DeepSeek сугубо с целью попробовать как это вообще работает.</p>
-      <p>Если что-то не нравится — пишите в личные сообщения на <b>4PDA</b>, постараюсь разобраться и исправить.</p>
-      <p class="dim">Если наоборот, что-то нравится — заходите в раздел «Поблагодарить».</p>
-      <p>RadioTelescope — агрегатор ссылок на публичные интернет-потоки. Приложение не хранит и не ретранслирует аудио. Все права на контент принадлежат правообладателям. Если вы правообладатель и хотите удалить ссылку — напишите на 4PDA пользователю SayanWolf.</p>
-      <div class="modal-actions"><button class="modal-btn primary" data-close>ЗАКРЫТЬ</button></div>`
-  },
-  settings: {
-    title: "НАСТРОЙКИ",
-    html: `
-      <div class="settings-row">
-        <div><span>Тема</span><small>Оформление интерфейса</small></div>
-        <div class="theme-selector">
-          <div class="theme-btn ${state.theme==='dark'?'active':''}" data-theme="dark"></div>
-          <div class="theme-btn ${state.theme==='black'?'active':''}" data-theme="black"></div>
-          <div class="theme-btn ${state.theme==='light'?'active':''}" data-theme="light"></div>
-        </div>
-      </div>
-      <div class="settings-row">
-        <div><span>Основной цвет</span><small>Акценты</small></div>
-        <input type="color" class="color-input" id="accentPicker" value="${state.accent}">
-      </div>
-      <div class="settings-row">
-        <div><span>Второй цвет</span><small>Резерв</small></div>
-        <input type="color" class="color-input" id="accent2Picker" value="${state.accent2}">
-      </div>
-      <div class="modal-actions"><button class="modal-btn primary" data-close>ГОТОВО</button></div>`
-  },
-  thanks: {
-    title: "ПОБЛАГОДАРИТЬ",
-    html: `
-      <p>Если RadioTelescope вам пригодился — можно сказать спасибо автору:</p>
-      <p class="dim">• Написать в ЛС на 4PDA пользователю <b>SayanWolf</b><br>
-      • Поделиться ссылкой с друзьями<br>
-      • Оставить отзыв в теме приложения</p>
-      <div class="modal-actions"><button class="modal-btn primary" data-close>СПАСИБО!</button></div>`
-  }
-};
-
-function openModal(type) {
-  const c = modalContent[type];
-  if (!c) return;
-  modal.innerHTML = `<div class="modal-title">${c.title}</div><div class="modal-body">${c.html}</div>`;
-  modalBackdrop.classList.add('show');
-  modal.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
-  if (type === 'settings') {
-    modal.querySelectorAll('.theme-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        modal.querySelectorAll('.theme-btn').forEach(x => x.classList.remove('active'));
-        btn.classList.add('active');
-        state.theme = btn.dataset.theme;
-        applyTheme();
-      });
-    });
-    modal.querySelector('#accentPicker').addEventListener('input', e => { state.accent = e.target.value; applyTheme(); });
-    modal.querySelector('#accent2Picker').addEventListener('input', e => { state.accent2 = e.target.value; applyTheme(); });
-  }
-}
-function closeModal() { modalBackdrop.classList.remove('show'); }
-modalBackdrop.addEventListener('click', e => { if (e.target === modalBackdrop) closeModal(); });
-document.querySelectorAll('.splash-footer button').forEach(b => {
-  b.addEventListener('click', () => openModal(b.dataset.modal));
-});
-$('#openSettingsBtn').addEventListener('click', () => openModal('settings'));
-
-/* ============== СТРАНИЦА СТАТИСТИКИ ============== */
-const statsPage = $('#statsPage');
-const statsBody = $('#statsBody');
-
-function renderStats() {
-  const { genres, countries, artists } = state.stats;
-  const totalG = Object.values(genres).reduce((a,b)=>a+b, 0);
-  const totalC = Object.values(countries).reduce((a,b)=>a+b, 0);
-  const totalA = Object.values(artists).reduce((a,b)=>a+b, 0);
-
-  const buildSection = (title, obj, total) => {
-    const entries = Object.entries(obj).sort((a,b) => b[1] - a[1]);
-    if (!entries.length) {
-      return `<div class="stats-section"><h3>${title}</h3><div class="stats-empty">— НЕТ ДАННЫХ —</div></div>`;
-    }
-    const rows = entries.map(([name, sec]) => {
-      const pct = total ? (sec / total * 100) : 0;
-      return `<div class="stat-row">
-        <div class="stat-row-label">
-          <span class="name">${name}</span>
-          <span class="pct">${pct.toFixed(1)}% · <span class="time">${formatTime(sec)}</span></span>
-        </div>
-        <div class="stat-bar"><div class="stat-bar-fill" style="width:${pct}%"></div></div>
-      </div>`;
-    }).join('');
-    return `<div class="stats-section"><h3>${title}</h3>${rows}</div>`;
-  };
-
-  const totalAll = totalG + totalC + totalA;
-  let html = '';
-  if (totalAll === 0) {
-    html = `<div class="stats-empty" style="padding:60px 16px;">— СТАТИСТИКА ПОКА ПУСТА —<br><br>Включите любую станцию, чтобы начать учёт времени.</div>`;
-  } else {
-    html += buildSection('ПО ЖАНРАМ', genres, totalG);
-    html += buildSection('ПО СТРАНАМ', countries, totalC);
-    html += buildSection('ПО ИСПОЛНИТЕЛЯМ (ДИСКОГРАФИЯ)', artists, totalA);
-    html += `<div class="stats-footer-actions"><button id="resetStatsBtn">СБРОСИТЬ СТАТИСТИКУ</button></div>`;
-  }
-  statsBody.innerHTML = html;
-  const resetBtn = document.getElementById('resetStatsBtn');
-  if (resetBtn) resetBtn.addEventListener('click', () => {
-    if (confirm('Сбросить всю статистику?')) {
-      state.stats = { genres:{}, countries:{}, artists:{} };
-      saveStats();
-      renderStats();
-    }
-  });
-}
-
-$('#openStatsBtn').addEventListener('click', () => { renderStats(); statsPage.classList.add('show'); });
-$('#statsClose').addEventListener('click', () => { statsPage.classList.remove('show'); });
-
-/* ============== ИНИЦИАЛИЗАЦИЯ ============== */
-$('#startBtn').addEventListener('click', () => {
-  $('#splash').classList.add('hidden');
-  $('#app').classList.add('visible');
-  render();
-});
-
-applyTheme();
-
-/* ============== SERVICE WORKER ============== */
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js').catch(err => {
-      console.warn('SW registration failed:', err);
-    });
-  });
-}
-</script>
-</body>
-</html>
+    <div class="stats-empty">— Н
