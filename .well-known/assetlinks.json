@@ -1,8 +1,0 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "io.github.sayanwolf.twa",
-        "sha256_cert_fingerprints": ["EA:B2:16:D2:0F:1E:B2:3B:25:17:B6:D7:8A:44:CA:F2:78:FC:4F:B2:20:46:06:3C:9E:59:14:45:5D:93:F6:E6"]
-      }
-    }]
