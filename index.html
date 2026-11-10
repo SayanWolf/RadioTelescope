@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <title>RadioTelescope</title>
 
-<!-- PWA -->
 <link rel="manifest" href="./manifest.json" />
 <meta name="theme-color" content="#1c1c1c" />
 <meta name="mobile-web-app-capable" content="yes" />
@@ -57,7 +56,6 @@
     transition: background .3s ease, color .3s ease;
   }
 
-  /* SPLASH */
   #splash {
     position: fixed; inset: 0;
     display: flex; flex-direction: column;
@@ -97,7 +95,6 @@
   }
   .splash-footer button:hover { color: var(--text); border-color: var(--border-strong); }
 
-  /* APP */
   #app { height: 100vh; display: flex; flex-direction: column; opacity: 0; transition: opacity .4s ease .1s; }
   #app.visible { opacity: 1; }
   header {
@@ -118,7 +115,6 @@
   }
   .topbar-btn:hover { color: var(--text); border-color: var(--border-strong); }
 
-  /* Кнопка выхода — красный кругляш питания (левый верхний угол) */
   .exit-btn {
     width: 32px; height: 32px; flex: 0 0 32px;
     border-radius: 50%;
@@ -157,7 +153,6 @@
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 4px; }
   }
 
-  /* СТАНЦИЯ (без иконки, без now playing) */
   .station {
     display: flex; align-items: center; gap: 10px; padding: 10px 12px;
     background: var(--surface); border: 1px solid var(--border);
@@ -187,7 +182,6 @@
   .station:hover .station-play { color: var(--accent); border-color: var(--accent); }
   .station.active .station-play { background: var(--accent); color: var(--bg-0); border-color: var(--accent); }
 
-  /* Drill-down */
   .country-wrap { background: var(--surface); border: 1px solid var(--border); margin-bottom: 3px; }
   .country-wrap.open { border-color: var(--accent); }
   .country {
@@ -207,7 +201,6 @@
     background: var(--bg-0); border-top: 1px solid var(--border);
   }
 
-  /* ПЛЕЕР (без now playing) */
   #player {
     position: fixed; left: 0; right: 0; bottom: 0;
     transform: translateY(110%);
@@ -305,7 +298,6 @@
   input[type=range]::-moz-range-track { height: 6px; background: var(--bg-0); border: 1px solid var(--border); }
   input[type=range]::-moz-range-thumb { width: 12px; height: 16px; background: var(--bg-2); border: 1px solid var(--border-strong); border-radius: 0; }
 
-  /* ЭКВАЛАЙЗЕР */
   .eq-panel { max-height: 0; overflow: hidden; transition: max-height .35s cubic-bezier(.22,1,.36,1); background: var(--bg-0); }
   .player-inner.eq-open .eq-panel { max-height: 220px; }
   .eq-header {
@@ -325,7 +317,7 @@
   .eq-band input[type=range] {
     writing-mode: vertical-lr; direction: rtl;
     width: 6px; height: 80px;
-    -webkit-appearance: slider-vertical; appearance: slider-vertical; padding: 0;
+    padding: 0;
   }
   .eq-band input[type=range]::-webkit-slider-runnable-track { width: 6px; height: 100%; background: var(--bg-2); border: 1px solid var(--border); }
   .eq-band input[type=range]::-webkit-slider-thumb {
@@ -334,7 +326,6 @@
   }
   .eq-scale { display: flex; justify-content: space-between; padding: 0 14px 8px; font-size: 9px; color: var(--text-dim); letter-spacing: .5px; }
 
-  /* СТРАНИЦА СТАТИСТИКИ */
   #statsPage {
     position: fixed; inset: 0; z-index: 150; background: var(--bg-0);
     display: flex; flex-direction: column;
@@ -388,7 +379,6 @@
   }
   .stats-footer-actions button:hover { color: var(--text); }
 
-  /* МОДАЛКИ */
   #modalBackdrop {
     position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,.7);
     opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility .25s;
@@ -448,7 +438,6 @@
 </head>
 <body data-theme="dark">
 
-<!-- SPLASH -->
 <section id="splash">
   <div class="splash-logo-wrap">
     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231c1c1c'/%3E%3Cg stroke='%2300E5FF' stroke-width='2.5' stroke-linecap='square' stroke-linejoin='miter' fill='none'%3E%3Cpath d='M30 65 L42 53 L62 33 L68 39 L48 59 Z'/%3E%3Cpath d='M62 33 L72 23 L82 33 L72 43'/%3E%3Ccircle cx='44' cy='65' r='4'/%3E%3Cpath d='M44 69 L34 82 M44 69 L44 84 M44 69 L54 82'/%3E%3C/g%3E%3Cg fill='%2300E5FF'%3E%3Crect x='22' y='26' width='2' height='2'/%3E%3Crect x='78' y='20' width='2' height='2'/%3E%3Crect x='28' y='78' width='2' height='2'/%3E%3Crect x='72' y='70' width='2' height='2'/%3E%3C/g%3E%3C/svg%3E" alt="RadioTelescope" />
@@ -466,7 +455,6 @@
   </div>
 </section>
 
-<!-- APP -->
 <div id="app">
   <header>
     <div class="topbar">
@@ -488,11 +476,521 @@
   </main>
 </div>
 
-<!-- СТАТИСТИКА -->
 <div id="statsPage">
   <div class="stats-header">
     <h2>СТАТИСТИКА</h2>
     <button class="stats-close" id="statsClose">НАЗАД</button>
   </div>
   <div class="stats-body" id="statsBody">
-    <div class="stats-empty">— Н
+    <div class="stats-empty">— НЕТ ДАННЫХ —</div>
+  </div>
+</div>
+
+<div id="player">
+   <div class="player-inner" id="playerInner">
+    <div class="player-main">
+      <div class="viz">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <div class="player-info">
+        <div class="player-station" id="pStation">— НЕТ СИГНАЛА —</div>
+        <div class="player-meta" id="pMeta">Выберите станцию</div>
+      </div>
+      <button class="fav-btn" id="pFav" title="В избранное">+</button>
+      <button class="play-btn" id="pPlay">▶</button>
+      <button class="eq-btn" id="pEq" title="Эквалайзер">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M4 20V10M8 20V4M12 20V14M16 20V8M20 20V12"/></svg>
+      </button>
+    </div>
+    <div class="player-volume">
+      <label>VOL</label>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="square"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      <input type="range" id="volume" min="0" max="100" value="70" />
+    </div>
+    <div class="eq-panel">
+      <div class="eq-header">
+        <span>ГРАФИЧЕСКИЙ ЭКВАЛАЙЗЕР</span>
+        <button class="eq-reset" id="eqReset">СБРОС</button>
+      </div>
+      <div class="eq-sliders" id="eqSliders">
+        <div class="eq-band"><span class="eq-label">60</span><input type="range" min="-12" max="12" value="0" data-freq="60"></div>
+        <div class="eq-band"><span class="eq-label">170</span><input type="range" min="-12" max="12" value="0" data-freq="170"></div>
+        <div class="eq-band"><span class="eq-label">310</span><input type="range" min="-12" max="12" value="0" data-freq="310"></div>
+        <div class="eq-band"><span class="eq-label">600</span><input type="range" min="-12" max="12" value="0" data-freq="600"></div>
+        <div class="eq-band"><span class="eq-label">1K</span><input type="range" min="-12" max="12" value="0" data-freq="1000"></div>
+        <div class="eq-band"><span class="eq-label">3K</span><input type="range" min="-12" max="12" value="0" data-freq="3000"></div>
+        <div class="eq-band"><span class="eq-label">6K</span><input type="range" min="-12" max="12" value="0" data-freq="6000"></div>
+        <div class="eq-band"><span class="eq-label">12K</span><input type="range" min="-12" max="12" value="0" data-freq="12000"></div>
+      </div>
+      <div class="eq-scale"><span>-12dB</span><span>0dB</span><span>+12dB</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="modalBackdrop">
+  <div class="modal" id="modal"></div>
+</div>
+  <div class="player-inner" id="playerInner">
+    <div class="player-main">
+      <div class="viz">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <div class="player-info">
+        <div class="player-station" id="pStation">— НЕТ СИГНАЛА —</div>
+        <div class="player-meta" id="pMeta">Выберите станцию</div>
+      </div>
+      <button class="fav-btn" id="pFav" title="В избранное">+</button>
+      <button class="play-btn" id="pPlay">▶</button>
+      <button class="eq-btn" id="pEq" title="Эквалайзер">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M4 20V10M8 20V4M12 20V14M16 20V8M20 20V12"/></svg>
+      </button>
+    </div>
+    <div class="player-volume">
+      <label>VOL</label>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="square"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      <input type="range" id="volume" min="0" max="100" value="70" />
+    </div>
+    <div class="eq-panel">
+      <div class="eq-header">
+        <span>ГРАФИЧЕСКИЙ ЭКВАЛАЙЗЕР</span>
+        <button class="eq-reset" id="eqReset">СБРОС</button>
+      </div>
+      <div class="eq-sliders" id="eqSliders">
+        <div class="eq-band"><span class="eq-label">60</span><input type="range" min="-12" max="12" value="0" data-freq="60"></div>
+        <div class="eq-band"><span class="eq-label">170</span><input type="range" min="-12" max="12" value="0" data-freq="170"></div>
+        <div class="eq-band"><span class="eq-label">310</span><input type="range" min="-12" max="12" value="0" data-freq="310"></div>
+        <div class="eq-band"><span class="eq-label">600</span><input type="range" min="-12" max="12" value="0" data-freq="600"></div>
+        <div class="eq-band"><span class="eq-label">1K</span><input type="range" min="-12" max="12" value="0" data-freq="1000"></div>
+        <div class="eq-band"><span class="eq-label">3K</span><input type="range" min="-12" max="12" value="0" data-freq="3000"></div>
+        <div class="eq-band"><span class="eq-label">6K</span><input type="range" min="-12" max="12" value="0" data-freq="6000"></div>
+        <div class="eq-band"><span class="eq-label">12K</span><input type="range" min="-12" max="12" value="0" data-freq="12000"></div>
+      </div>
+      <div class="eq-scale"><span>-12dB</span><span>0dB</span><span>+12dB</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="modalBackdrop">
+  <div class="modal" id="modal"></div>
+</div>
+<script>
+/* ============== ДАННЫЕ (пусто — готовимся к реальным станциям) ============== */
+const ALL_STATIONS = [];
+
+const COUNTRIES = [
+  {code:"US", name:"США", flag:"🇺🇸"},
+  {code:"GB", name:"Великобритания", flag:"🇬🇧"},
+  {code:"RU", name:"Россия", flag:"🇷🇺"},
+  {code:"DE", name:"Германия", flag:"🇩🇪"},
+  {code:"FR", name:"Франция", flag:"🇫🇷"},
+  {code:"JP", name:"Япония", flag:"🇯🇵"},
+  {code:"BR", name:"Бразилия", flag:"🇧🇷"},
+  {code:"KR", name:"Южная Корея", flag:"🇰🇷"},
+  {code:"CA", name:"Канада", flag:"🇨🇦"},
+  {code:"AU", name:"Австралия", flag:"🇦🇺"},
+  {code:"NL", name:"Нидерланды", flag:"🇳🇱"},
+  {code:"ES", name:"Испания", flag:"🇪🇸"},
+  {code:"IT", name:"Италия", flag:"🇮🇹"},
+  {code:"AT", name:"Австрия", flag:"🇦🇹"},
+  {code:"SE", name:"Швеция", flag:"🇸🇪"},
+  {code:"NO", name:"Норвегия", flag:"🇳🇴"},
+  {code:"IN", name:"Индия", flag:"🇮🇳"},
+  {code:"CN", name:"Китай", flag:"🇨🇳"},
+  {code:"MX", name:"Мексика", flag:"🇲🇽"},
+  {code:"AR", name:"Аргентина", flag:"🇦🇷"},
+  {code:"PL", name:"Польша", flag:"🇵🇱"},
+  {code:"UA", name:"Украина", flag:"🇺🇦"},
+  {code:"TR", name:"Турция", flag:"🇹🇷"},
+  {code:"ZA", name:"Южная Африка", flag:"🇿🇦"},
+];
+
+const GENRES = ["Rock","Pop","Jazz","Electronic","Classical","Hip-Hop"];
+const CATEGORIES = ["Все", ...GENRES, "Избранное", "Дискография", "География"];
+
+const state = {
+  activeCat: "Все",
+  currentStation: null,
+  playing: false,
+  theme: localStorage.getItem('rt_theme') || 'dark',
+  accent: localStorage.getItem('rt_accent') || '#00E5FF',
+  accent2: localStorage.getItem('rt_accent2') || '#7C3AED',
+  favorites: JSON.parse(localStorage.getItem('rt_favorites') || '[]'),
+  stats: JSON.parse(localStorage.getItem('rt_stats') || '{"genres":{},"countries":{},"artists":{}}'),
+  tickInterval: null,
+};
+
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+
+function applyTheme() {
+  document.body.dataset.theme = state.theme;
+  document.documentElement.style.setProperty('--accent', state.accent);
+  document.documentElement.style.setProperty('--accent-2', state.accent2);
+  localStorage.setItem('rt_theme', state.theme);
+  localStorage.setItem('rt_accent', state.accent);
+  localStorage.setItem('rt_accent2', state.accent2);
+}
+
+function getStationsByTag(tag) {
+  if (tag === "Все") return ALL_STATIONS;
+  return ALL_STATIONS.filter(s => s.genre === tag);
+}
+function getStationsByCountry(code) { return ALL_STATIONS.filter(s => s.country === code); }
+function getFavoriteStations() { return ALL_STATIONS.filter(s => state.favorites.includes(s.n)); }
+function getArtists() {
+  const map = new Map();
+  ALL_STATIONS.forEach(s => {
+    if (!map.has(s.artist)) map.set(s.artist, []);
+    map.get(s.artist).push(s);
+  });
+  return Array.from(map.entries()).sort((a,b) => a[0].localeCompare(b[0]));
+}
+
+function saveFavorites() { localStorage.setItem('rt_favorites', JSON.stringify(state.favorites)); }
+function toggleFavorite(name) {
+  const idx = state.favorites.indexOf(name);
+  if (idx === -1) state.favorites.push(name);
+  else state.favorites.splice(idx, 1);
+  saveFavorites();
+  updateFavButton();
+  if (state.activeCat === "Избранное") render();
+}
+function updateFavButton() {
+  const btn = $('#pFav');
+  if (state.currentStation && state.favorites.includes(state.currentStation.n)) {
+    btn.classList.add('on'); btn.textContent = '✓';
+  } else {
+    btn.classList.remove('on'); btn.textContent = '+';
+  }
+}
+
+function saveStats() { localStorage.setItem('rt_stats', JSON.stringify(state.stats)); }
+function tickStats() {
+  if (!state.playing || !state.currentStation) return;
+  const s = state.currentStation;
+  state.stats.genres[s.genre] = (state.stats.genres[s.genre] || 0) + 1;
+  state.stats.countries[s.countryName] = (state.stats.countries[s.countryName] || 0) + 1;
+  state.stats.artists[s.artist] = (state.stats.artists[s.artist] || 0) + 1;
+  saveStats();
+}
+function startTick() { stopTick(); state.tickInterval = setInterval(tickStats, 1000); }
+function stopTick() { if (state.tickInterval) { clearInterval(state.tickInterval); state.tickInterval = null; } }
+function formatTime(sec) {
+  if (sec < 60) return sec + 'с';
+  const m = Math.floor(sec / 60);
+  if (m < 60) return m + 'м ' + (sec % 60) + 'с';
+  const h = Math.floor(m / 60);
+  return h + 'ч ' + (m % 60) + 'м';
+}
+
+function createStationCard(s) {
+  const el = document.createElement('div');
+  el.className = 'station';
+  el.dataset.name = s.n;
+  el.innerHTML = `
+    <div class="station-info">
+      <div class="station-artist">${s.artist}</div>
+      <div class="station-name">${s.n}</div>
+    </div>
+    <div class="station-play">▶</div>`;
+  el.addEventListener('click', () => selectStation(s, el));
+  return el;
+}
+
+const grid = $('#grid');
+
+function renderStations(list, emptyMsg) {
+  grid.innerHTML = '';
+  if (!list.length) {
+    grid.innerHTML = `<div style="text-align:center;color:var(--text-dim);padding:30px;font-size:12px;letter-spacing:1px;">— ${emptyMsg || 'СТАНЦИИ НЕ НАЙДЕНЫ'} —</div>`;
+    return;
+  }
+  list.forEach(s => grid.appendChild(createStationCard(s)));
+}
+
+function renderCountries() {
+  grid.innerHTML = '';
+  COUNTRIES.forEach(c => {
+    const stations = getStationsByCountry(c.code);
+    const wrap = document.createElement('div');
+    wrap.className = 'country-wrap';
+    const header = document.createElement('div');
+    header.className = 'country';
+    header.innerHTML = `
+      <div class="country-flag">${c.flag}</div>
+      <div class="country-name">${c.name}</div>
+      <div class="country-count">${String(stations.length).padStart(2,'0')}</div>
+      <div class="country-chevron">▼</div>`;
+    const listEl = document.createElement('div');
+    listEl.className = 'country-stations';
+    const inner = document.createElement('div');
+    inner.className = 'country-stations-inner';
+    if (stations.length) stations.forEach(s => inner.appendChild(createStationCard(s)));
+    else inner.innerHTML = '<div style="padding:10px;font-size:11px;color:var(--text-dim);letter-spacing:1px;">— НЕТ ДОСТУПНЫХ СТАНЦИЙ —</div>';
+    listEl.appendChild(inner);
+    header.addEventListener('click', () => wrap.classList.toggle('open'));
+    wrap.appendChild(header); wrap.appendChild(listEl);
+    grid.appendChild(wrap);
+  });
+}
+
+function renderArtists() {
+  grid.innerHTML = '';
+  const artists = getArtists();
+  if (!artists.length) {
+    grid.innerHTML = '<div style="text-align:center;color:var(--text-dim);padding:30px;font-size:12px;letter-spacing:1px;">— НЕТ ИСПОЛНИТЕЛЕЙ —</div>';
+    return;
+  }
+  artists.forEach(([name, stations]) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'country-wrap';
+    const header = document.createElement('div');
+    header.className = 'country';
+    header.innerHTML = `
+      <div class="country-flag">♪</div>
+      <div class="country-name">${name}</div>
+      <div class="country-count">${String(stations.length).padStart(2,'0')}</div>
+      <div class="country-chevron">▼</div>`;
+    const listEl = document.createElement('div');
+    listEl.className = 'country-stations';
+    const inner = document.createElement('div');
+    inner.className = 'country-stations-inner';
+    stations.forEach(s => inner.appendChild(createStationCard(s)));
+    listEl.appendChild(inner);
+    header.addEventListener('click', () => wrap.classList.toggle('open'));
+    wrap.appendChild(header); wrap.appendChild(listEl);
+    grid.appendChild(wrap);
+  });
+}
+
+function render() {
+  if (state.activeCat === "География") renderCountries();
+  else if (state.activeCat === "Дискография") renderArtists();
+  else if (state.activeCat === "Избранное") renderStations(getFavoriteStations(), 'СПИСОК ПУСТ — ДОБАВЬТЕ СТАНЦИИ ПЛЮСИКОМ');
+  else renderStations(getStationsByTag(state.activeCat));
+}
+
+const chipsEl = $('#chips');
+CATEGORIES.forEach(c => {
+  const b = document.createElement('button');
+  b.className = 'chip' + (c === state.activeCat ? ' active' : '');
+  b.textContent = c.toUpperCase();
+  b.addEventListener('click', () => {
+    $$('.chip').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    state.activeCat = c;
+    render();
+  });
+  chipsEl.appendChild(b);
+});
+
+const player = $('#player');
+const playerInner = $('#playerInner');
+const pStation = $('#pStation');
+const pMeta = $('#pMeta');
+const pPlay = $('#pPlay');
+const pEq = $('#pEq');
+const pFav = $('#pFav');
+
+function selectStation(s, el) {
+  $$('.station').forEach(x => x.classList.remove('active'));
+  el.classList.add('active');
+  state.currentStation = s;
+  pStation.textContent = s.n.toUpperCase();
+  pMeta.textContent = (s.genre || '') + ' / ' + (s.countryName || '');
+  state.playing = true;
+  pPlay.textContent = '❚❚';
+  player.classList.add('show');
+  document.body.classList.add('is-playing');
+  updateFavButton();
+  startTick();
+}
+
+function togglePlay() {
+  if (!state.currentStation) return;
+  state.playing = !state.playing;
+  pPlay.textContent = state.playing ? '❚❚' : '▶';
+  if (state.playing) { document.body.classList.add('is-playing'); startTick(); }
+  else { document.body.classList.remove('is-playing'); stopTick(); }
+}
+pPlay.addEventListener('click', togglePlay);
+pFav.addEventListener('click', () => { if (state.currentStation) toggleFavorite(state.currentStation.n); });
+pEq.addEventListener('click', () => {
+  playerInner.classList.toggle('eq-open');
+  pEq.classList.toggle('on');
+});
+
+const vol = $('#volume');
+vol.addEventListener('input', () => {});
+const eqValues = {};
+document.querySelectorAll('#eqSliders input').forEach(input => {
+  const freq = parseInt(input.dataset.freq);
+  eqValues[freq] = 0;
+  input.addEventListener('input', () => {
+    eqValues[freq] = parseInt(input.value);
+  });
+});
+$('#eqReset').addEventListener('click', () => {
+  document.querySelectorAll('#eqSliders input').forEach(input => {
+    input.value = 0;
+    eqValues[parseInt(input.dataset.freq)] = 0;
+  });
+});
+
+const modalBackdrop = $('#modalBackdrop');
+const modal = $('#modal');
+
+const modalContent = {
+  about: {
+    title: "О ПРИЛОЖЕНИИ",
+    html: `
+      <p>Приложение создано пользователем <b>SayanWolf</b> с помощью DeepSeek сугубо с целью попробовать как это вообще работает.</p>
+      <p>Если что-то не нравится — пишите в личные сообщения на <b>4PDA</b>, постараюсь разобраться и исправить.</p>
+      <p class="dim">Если наоборот, что-то нравится — заходите в раздел «Поблагодарить».</p>
+      <p>RadioTelescope — агрегатор ссылок на публичные интернет-потоки. Приложение не хранит и не ретранслирует аудио. Все права на контент принадлежат правообладателям. Если вы правообладатель и хотите удалить ссылку — напишите на 4PDA пользователю SayanWolf.</p>
+      <div class="modal-actions"><button class="modal-btn primary" data-close>ЗАКРЫТЬ</button></div>`
+  },
+  settings: {
+    title: "НАСТРОЙКИ",
+    html: `
+      <div class="settings-row">
+        <div><span>Тема</span><small>Оформление интерфейса</small></div>
+        <div class="theme-selector">
+          <div class="theme-btn ${state.theme==='dark'?'active':''}" data-theme="dark"></div>
+          <div class="theme-btn ${state.theme==='black'?'active':''}" data-theme="black"></div>
+          <div class="theme-btn ${state.theme==='light'?'active':''}" data-theme="light"></div>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div><span>Основной цвет</span><small>Акценты</small></div>
+        <input type="color" class="color-input" id="accentPicker" value="${state.accent}">
+      </div>
+      <div class="settings-row">
+        <div><span>Второй цвет</span><small>Резерв</small></div>
+        <input type="color" class="color-input" id="accent2Picker" value="${state.accent2}">
+      </div>
+      <div class="modal-actions"><button class="modal-btn primary" data-close>ГОТОВО</button></div>`
+  },
+  thanks: {
+    title: "ПОБЛАГОДАРИТЬ",
+    html: `
+      <p>Если RadioTelescope вам пригодился — можно сказать спасибо автору:</p>
+      <p class="dim">• Написать в ЛС на 4PDA пользователю <b>SayanWolf</b><br>
+      • Поделиться ссылкой с друзьями<br>
+      • Оставить отзыв в теме приложения</p>
+      <div class="modal-actions"><button class="modal-btn primary" data-close>СПАСИБО!</button></div>`
+  }
+};
+
+function openModal(type) {
+  const c = modalContent[type];
+  if (!c) return;
+  modal.innerHTML = `<div class="modal-title">${c.title}</div><div class="modal-body">${c.html}</div>`;
+  modalBackdrop.classList.add('show');
+  modal.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
+  if (type === 'settings') {
+    modal.querySelectorAll('.theme-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        modal.querySelectorAll('.theme-btn').forEach(x => x.classList.remove('active'));
+        btn.classList.add('active');
+        state.theme = btn.dataset.theme;
+        applyTheme();
+      });
+    });
+    modal.querySelector('#accentPicker').addEventListener('input', e => { state.accent = e.target.value; applyTheme(); });
+    modal.querySelector('#accent2Picker').addEventListener('input', e => { state.accent2 = e.target.value; applyTheme(); });
+  }
+}
+function closeModal() { modalBackdrop.classList.remove('show'); }
+modalBackdrop.addEventListener('click', e => { if (e.target === modalBackdrop) closeModal(); });
+document.querySelectorAll('.splash-footer button').forEach(b => {
+  b.addEventListener('click', () => openModal(b.dataset.modal));
+});
+$('#openSettingsBtn').addEventListener('click', () => openModal('settings'));
+
+const statsPage = $('#statsPage');
+const statsBody = $('#statsBody');
+
+function renderStats() {
+  const { genres, countries, artists } = state.stats;
+  const totalG = Object.values(genres).reduce((a,b)=>a+b, 0);
+  const totalC = Object.values(countries).reduce((a,b)=>a+b, 0);
+  const totalA = Object.values(artists).reduce((a,b)=>a+b, 0);
+
+  const buildSection = (title, obj, total) => {
+    const entries = Object.entries(obj).sort((a,b) => b[1] - a[1]);
+    if (!entries.length) {
+      return `<div class="stats-section"><h3>${title}</h3><div class="stats-empty">— НЕТ ДАННЫХ —</div></div>`;
+    }
+    const rows = entries.map(([name, sec]) => {
+      const pct = total ? (sec / total * 100) : 0;
+      return `<div class="stat-row">
+        <div class="stat-row-label">
+          <span class="name">${name}</span>
+          <span class="pct">${pct.toFixed(1)}% · <span class="time">${formatTime(sec)}</span></span>
+        </div>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    }).join('');
+    return `<div class="stats-section"><h3>${title}</h3>${rows}</div>`;
+  };
+
+  const totalAll = totalG + totalC + totalA;
+  let html = '';
+  if (totalAll === 0) {
+    html = `<div class="stats-empty" style="padding:60px 16px;">— СТАТИСТИКА ПОКА ПУСТА —<br><br>Включите любую станцию, чтобы начать учёт времени.</div>`;
+  } else {
+    html += buildSection('ПО ЖАНРАМ', genres, totalG);
+    html += buildSection('ПО СТРАНАМ', countries, totalC);
+    html += buildSection('ПО ИСПОЛНИТЕЛЯМ (ДИСКОГРАФИЯ)', artists, totalA);
+    html += `<div class="stats-footer-actions"><button id="resetStatsBtn">СБРОСИТЬ СТАТИСТИКУ</button></div>`;
+  }
+  statsBody.innerHTML = html;
+  const resetBtn = document.getElementById('resetStatsBtn');
+  if (resetBtn) resetBtn.addEventListener('click', () => {
+    if (confirm('Сбросить всю статистику?')) {
+      state.stats = { genres:{}, countries:{}, artists:{} };
+      saveStats();
+      renderStats();
+    }
+  });
+}
+
+$('#openStatsBtn').addEventListener('click', () => { renderStats(); statsPage.classList.add('show'); });
+$('#statsClose').addEventListener('click', () => { statsPage.classList.remove('show'); });
+
+/* Кнопка выхода */
+$('#exitBtn').addEventListener('click', () => {
+  state.playing = false;
+  state.currentStation = null;
+  stopTick();
+  document.body.classList.remove('is-playing');
+  const pl = document.getElementById('player');
+  if (pl) pl.classList.remove('show');
+  try {
+    if (navigator.app && navigator.app.exitApp) navigator.app.exitApp();
+    else if (window.median && window.median.app && window.median.app.close) window.median.app.close();
+    else window.close();
+  } catch (e) { console.warn(e); }
+});
+
+$('#startBtn').addEventListener('click', () => {
+  $('#splash').classList.add('hidden');
+  $('#app').classList.add('visible');
+  render();
+});
+
+applyTheme();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(err => {
+      console.warn('SW registration failed:', err);
+    });
+  });
+}
+</script>
+</body>
+</html>
