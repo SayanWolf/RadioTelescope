@@ -73,9 +73,11 @@
 }
 #bgLayer > svg {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  top: 50%;
+  left: 50%;
+  width: 100vmax;
+  height: 100vmax;
+  transform: translate(-50%, -50%);
   display: block;
 }
 #bgLayer[data-bg="none"] { opacity: 0; }
@@ -812,7 +814,7 @@ function getBgSvg(type) {
       const op = (0.35 + (i % 4) * 0.15).toFixed(2);
       dots.push(`<circle cx="${x}" cy="${y}" r="${r}" fill="currentColor" opacity="${op}"/>`);
     }
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%" preserveAspectRatio="none" style="color:var(--accent);display:block;">${dots.join('')}</svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" style="color:var(--accent);display:block;">${dots.join('')}</svg>`;
   }
   if (type === 'nebula') {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%" preserveAspectRatio="none" style="display:block;">
@@ -835,12 +837,28 @@ function getBgSvg(type) {
       <rect width="100" height="100" fill="url(#n3)"/>
     </svg>`;
   }
-  if (type === 'orbits') {
+   if (type === 'orbits') {
     const circles = [];
     for (let i = 1; i <= 7; i++) {
       circles.push(`<circle cx="50" cy="50" r="${i * 7}" fill="none" stroke="currentColor" stroke-width="0.2" opacity="${(0.5 - i * 0.05).toFixed(2)}"/>`);
     }
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%" preserveAspectRatio="none" style="color:var(--accent);display:block;">${circles.join('')}</svg>`;
+    // «Небесные тела» — по одному на орбите, в разных позициях
+    const bodies = [
+      { r: 7,  angle: 20,  size: 0.8,  fill: 'var(--accent)' },
+      { r: 14, angle: 140, size: 1.0,  fill: 'var(--accent-2)' },
+      { r: 21, angle: 260, size: 0.7,  fill: 'var(--accent)' },
+      { r: 28, angle: 80,  size: 1.2,  fill: 'var(--accent-2)' },
+      { r: 35, angle: 200, size: 0.9,  fill: 'var(--accent)' },
+      { r: 42, angle: 320, size: 1.1,  fill: 'var(--accent-2)' },
+      { r: 49, angle: 60,  size: 0.6,  fill: 'var(--accent)' },
+    ];
+    const bodyEls = bodies.map(b => {
+      const rad = b.angle * Math.PI / 180;
+      const x = (50 + b.r * Math.cos(rad)).toFixed(2);
+      const y = (50 + b.r * Math.sin(rad)).toFixed(2);
+      return `<circle cx="${x}" cy="${y}" r="${b.size}" fill="${b.fill}" opacity="0.9"/>`;
+    }).join('');
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" style="color:var(--accent);display:block;">${circles.join('')}${bodyEls}</svg>`;
   }
   if (type === 'waves') {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%" preserveAspectRatio="none" style="color:var(--accent);display:block;">
