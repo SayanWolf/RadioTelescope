@@ -62,14 +62,24 @@
   }
 
   /* ============ ФОНЫ ============ */
-  #bgLayer {
-    position: fixed; inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    opacity: 0.55;
-    transition: opacity .4s ease;
-  }
-  #bgLayer[data-bg="none"] { opacity: 0; }
+ #bgLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  transition: opacity .4s ease;
+  overflow: hidden;
+}
+#bgLayer > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+#bgLayer[data-bg="none"] { opacity: 0; }
+body[data-theme="light"] #bgLayer { opacity: 0.7; }
 
   #app, #siteFooter, #eqPanel, #modalBackdrop {
     position: relative;
@@ -794,53 +804,50 @@ const FONTS = [
 /* ============== ФОНЫ (векторные SVG-паттерны) ============== */
 function getBgSvg(type) {
   if (type === 'stars') {
-    // Звёздное поле: мелкие точки
     const dots = [];
-    for (let i = 0; i < 60; i++) {
-      const x = (i * 137.5) % 100;
-      const y = (i * 73.3) % 100;
+    for (let i = 0; i < 80; i++) {
+      const x = ((i * 13.7 + 7) % 100).toFixed(2);
+      const y = ((i * 7.3 + 11) % 100).toFixed(2);
       const r = (i % 3 === 0) ? 0.6 : 0.3;
-      dots.push(`<circle cx="${x}%" cy="${y}%" r="${r}%" fill="currentColor" opacity="${0.4 + (i % 4) * 0.15}"/>`);
+      const op = (0.35 + (i % 4) * 0.15).toFixed(2);
+      dots.push(`<circle cx="${x}" cy="${y}" r="${r}" fill="currentColor" opacity="${op}"/>`);
     }
-    return `<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="color:var(--accent)"><rect width="100%" height="100%" fill="transparent"/>${dots.join('')}</svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%" preserveAspectRatio="none" style="color:var(--accent);display:block;">${dots.join('')}</svg>`;
   }
   if (type === 'nebula') {
-    // Туманность: мягкие радиальные пятна
-    return `<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%" preserveAspectRatio="none" style="display:block;">
       <defs>
-        <radialGradient id="n1" cx="30%" cy="30%" r="50%">
-          <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.25"/>
+        <radialGradient id="n1" cx="30%" cy="30%" r="60%">
+          <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.4"/>
           <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
         </radialGradient>
-        <radialGradient id="n2" cx="75%" cy="70%" r="50%">
-          <stop offset="0%" stop-color="var(--accent-2)" stop-opacity="0.25"/>
+        <radialGradient id="n2" cx="75%" cy="70%" r="60%">
+          <stop offset="0%" stop-color="var(--accent-2)" stop-opacity="0.4"/>
           <stop offset="100%" stop-color="var(--accent-2)" stop-opacity="0"/>
         </radialGradient>
-        <radialGradient id="n3" cx="50%" cy="100%" r="40%">
-          <stop offset="0%" stop-color="var(--accent-2)" stop-opacity="0.15"/>
+        <radialGradient id="n3" cx="50%" cy="100%" r="50%">
+          <stop offset="0%" stop-color="var(--accent-2)" stop-opacity="0.3"/>
           <stop offset="100%" stop-color="var(--accent-2)" stop-opacity="0"/>
         </radialGradient>
       </defs>
-      <rect width="100%" height="100%" fill="url(#n1)"/>
-      <rect width="100%" height="100%" fill="url(#n2)"/>
-      <rect width="100%" height="100%" fill="url(#n3)"/>
+      <rect width="100" height="100" fill="url(#n1)"/>
+      <rect width="100" height="100" fill="url(#n2)"/>
+      <rect width="100" height="100" fill="url(#n3)"/>
     </svg>`;
   }
   if (type === 'orbits') {
-    // Концентрические окружности
     const circles = [];
-    for (let i = 1; i <= 6; i++) {
-      circles.push(`<circle cx="50%" cy="50%" r="${i * 8}%" fill="none" stroke="currentColor" stroke-width="0.15" opacity="${0.4 - i * 0.04}"/>`);
+    for (let i = 1; i <= 7; i++) {
+      circles.push(`<circle cx="50" cy="50" r="${i * 7}" fill="none" stroke="currentColor" stroke-width="0.2" opacity="${(0.5 - i * 0.05).toFixed(2)}"/>`);
     }
-    return `<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="color:var(--accent)"><rect width="100%" height="100%" fill="transparent"/>${circles.join('')}</svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%" preserveAspectRatio="none" style="color:var(--accent);display:block;">${circles.join('')}</svg>`;
   }
   if (type === 'waves') {
-    // Горизонтальные волны
-    return `<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 100 100" style="color:var(--accent)">
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%" preserveAspectRatio="none" style="color:var(--accent);display:block;">
       <defs>
         <linearGradient id="wg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.2"/>
-          <stop offset="100%" stop-color="var(--accent-2)" stop-opacity="0.2"/>
+          <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="var(--accent-2)" stop-opacity="0.25"/>
         </linearGradient>
       </defs>
       <path d="M0 30 Q25 20 50 30 T100 30 V100 H0 Z" fill="url(#wg)"/>
@@ -850,7 +857,6 @@ function getBgSvg(type) {
   }
   return '';
 }
-
 const BG_OPTIONS = [
   { id: 'stars', name: 'Звёзды' },
   { id: 'nebula', name: 'Туманность' },
