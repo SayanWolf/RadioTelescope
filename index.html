@@ -32,31 +32,22 @@
     --text: #f0f2f5;
     --text-dim: #9ca3af;
     --danger: #e03131;
+    --heart: #ef4444;
     --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --radius: 12px;
     --radius-sm: 8px;
   }
   body[data-theme="black"] {
-    --bg-0: #000000;
-    --bg-1: #0a0a0a;
-    --bg-2: #141414;
-    --surface: #0f0f0f;
-    --surface-hover: #1a1a1a;
-    --border: rgba(255,255,255,0.06);
-    --border-strong: rgba(255,255,255,0.12);
-    --text: #ffffff;
-    --text-dim: #888;
+    --bg-0: #000000; --bg-1: #0a0a0a; --bg-2: #141414;
+    --surface: #0f0f0f; --surface-hover: #1a1a1a;
+    --border: rgba(255,255,255,0.06); --border-strong: rgba(255,255,255,0.12);
+    --text: #ffffff; --text-dim: #888;
   }
   body[data-theme="light"] {
-    --bg-0: #f5f6f8;
-    --bg-1: #ffffff;
-    --bg-2: #eef0f3;
-    --surface: #ffffff;
-    --surface-hover: #f0f2f5;
-    --border: rgba(0,0,0,0.08);
-    --border-strong: rgba(0,0,0,0.15);
-    --text: #0f172a;
-    --text-dim: #64748b;
+    --bg-0: #f5f6f8; --bg-1: #ffffff; --bg-2: #eef0f3;
+    --surface: #ffffff; --surface-hover: #f0f2f5;
+    --border: rgba(0,0,0,0.08); --border-strong: rgba(0,0,0,0.15);
+    --text: #0f172a; --text-dim: #64748b;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -70,18 +61,40 @@
     transition: background .3s ease, color .3s ease;
   }
 
+  /* ============ ФОНЫ ============ */
+  #bgLayer {
+    position: fixed; inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.55;
+    transition: opacity .4s ease;
+  }
+  #bgLayer[data-bg="none"] { opacity: 0; }
+
+  #app, #siteFooter, #eqPanel, #modalBackdrop {
+    position: relative;
+    z-index: 1;
+  }
+  #siteFooter, #eqPanel, #modalBackdrop { position: fixed; }
+  #app { position: relative; z-index: 1; }
+
   #app {
     height: 100vh;
     display: flex; flex-direction: column;
+    background: transparent;
   }
 
   /* ============ ШАПКА ============ */
   header {
     padding: 12px 16px 8px;
-    background: var(--bg-1);
+    background: rgba(28, 30, 36, 0.85);
+    backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
   }
+  body[data-theme="black"] header { background: rgba(10,10,10,0.85); }
+  body[data-theme="light"] header { background: rgba(255,255,255,0.85); }
+
   .topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
   .topbar h1 {
     font-size: 17px; font-weight: 700; letter-spacing: 2px;
@@ -90,12 +103,14 @@
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .brand-logo {
-    width: 28px; height: 28px;
-    display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px;
+    flex: 0 0 32px;
+    display: none;
+    align-items: center; justify-content: center;
     color: var(--accent);
-    flex-shrink: 0;
   }
-  .brand-logo svg { width: 22px; height: 22px; }
+  .brand-logo img { width: 100%; height: 100%; object-fit: contain; }
+  @media (min-width: 768px) { .brand-logo { display: flex; } }
 
   .mute-btn {
     width: 36px; height: 36px;
@@ -114,11 +129,7 @@
     border-color: #4ade80;
     box-shadow: 0 0 12px rgba(74, 222, 128, .4);
   }
-  .mute-btn.muted {
-    color: #f87171;
-    border-color: #f87171;
-    box-shadow: none;
-  }
+  .mute-btn.muted { color: #f87171; border-color: #f87171; box-shadow: none; }
   .mute-btn svg { width: 18px; height: 18px; }
 
   .topbar-btn {
@@ -181,24 +192,20 @@
     font-weight: 600;
   }
 
-  @media (max-width: 767px) {
-    .chips-arrow { display: flex; }
-  }
+  @media (max-width: 767px) { .chips-arrow { display: flex; } }
 
   /* ============ КОНТЕНТ ============ */
   main {
     flex: 1; overflow-y: auto;
-    padding: 12px 12px 120px;
+    padding: 12px 12px 140px;
     scrollbar-width: thin;
   }
   main::-webkit-scrollbar { width: 8px; }
   main::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
 
-  .grid {
-    display: flex; flex-direction: column; gap: 10px;
-  }
+  .grid { display: flex; flex-direction: column; gap: 10px; }
   @media (min-width: 768px) {
-    main { padding: 16px 16px 120px; }
+    main { padding: 16px 16px 140px; }
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -207,7 +214,7 @@
     }
   }
 
-  /* ============ КАРТОЧКА СТАНЦИИ ============ */
+  /* ============ КАРТОЧКА ============ */
   .station {
     display: flex; align-items: center; gap: 12px;
     padding: 12px 14px;
@@ -219,9 +226,7 @@
     position: relative;
   }
   .station:hover { background: var(--surface-hover); border-color: var(--border-strong); }
-
   body.is-playing .station:not(.active) { opacity: 0.4; }
-
   .station.active {
     position: sticky;
     top: 0;
@@ -280,41 +285,25 @@
     border-color: var(--accent);
   }
 
-  /* ============ ФИКСИРОВАННЫЙ ПОДВАЛ САЙТА ============ */
+  /* ============ ПОДВАЛ ============ */
   #siteFooter {
     position: fixed;
     left: 0; right: 0; bottom: 0;
     z-index: 40;
-    background: var(--bg-1);
+    background: rgba(28, 30, 36, 0.92);
+    backdrop-filter: blur(14px);
     border-top: 1px solid var(--border);
     box-shadow: 0 -4px 20px rgba(0,0,0,.3);
   }
-
-  .footer-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 16px;
-    font-size: 11.5px;
-    color: var(--text-dim);
-    letter-spacing: .5px;
-  }
-  .footer-row:first-child { padding-bottom: 4px; }
-  .footer-row:last-child { padding-top: 4px; }
-  .footer-author {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 500;
-    transition: opacity .2s ease;
-  }
-  .footer-author:hover { opacity: .7; }
+  body[data-theme="black"] #siteFooter { background: rgba(10,10,10,0.92); }
+  body[data-theme="light"] #siteFooter { background: rgba(255,255,255,0.92); }
 
   #playerControls {
     display: none;
     align-items: center;
-    gap: 10px;
-    padding: 8px 12px 10px;
-    border-top: 1px solid var(--border);
+    gap: 8px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
   }
   #playerControls.show { display: flex; }
 
@@ -380,17 +369,46 @@
     background: var(--accent); color: var(--bg-0); border-color: var(--accent);
   }
 
+  .heart-btn svg {
+    stroke: var(--text-dim);
+    fill: none;
+    transition: all .25s ease;
+  }
+  .heart-btn.on svg {
+    stroke: var(--heart);
+    fill: var(--heart);
+    filter: drop-shadow(0 0 6px var(--heart));
+  }
+
   .mute-desktop { display: none; }
   @media (min-width: 768px) {
     .mute-desktop { display: flex; }
     .mute-in-header { display: none; }
   }
 
+  /* Нижняя строка подвала */
+  .footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 16px;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: .5px;
+  }
+  .footer-author {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity .2s ease;
+  }
+  .footer-author:hover { opacity: .7; }
+
   /* ============ ЭКВАЛАЙЗЕР ============ */
   #eqPanel {
     position: fixed;
-    bottom: 100%;
     left: 0; right: 0;
+    bottom: 0;
     z-index: 45;
     background: var(--bg-1);
     border-top: 1px solid var(--border-strong);
@@ -400,10 +418,11 @@
     transition: transform .35s cubic-bezier(.22,1,.36,1);
     max-height: 0;
     overflow: hidden;
+    padding-bottom: 90px; /* чтобы не перекрывать подвал */
   }
   #eqPanel.show {
     transform: translateY(0);
-    max-height: 280px;
+    max-height: 300px;
   }
   .eq-header {
     padding: 10px 16px;
@@ -532,9 +551,10 @@
     border-bottom: 1px solid var(--border);
     font-size: 13.5px;
     gap: 12px;
+    flex-wrap: wrap;
   }
   .settings-row:last-of-type { border-bottom: none; }
-  .settings-row .settings-label { flex: 1; }
+  .settings-row .settings-label { flex: 1; min-width: 120px; }
   .settings-row .settings-label span { color: var(--text); font-weight: 500; }
   .settings-row .settings-label small { color: var(--text-dim); font-size: 11.5px; display: block; margin-top: 2px; }
 
@@ -551,9 +571,8 @@
   .theme-btn[data-theme="black"] { background: #000000; }
   .theme-btn[data-theme="light"] { background: #f5f6f8; }
 
-  .color-presets {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    padding-top: 4px;
+  .color-presets, .font-selector, .bg-selector {
+    display: flex; flex-wrap: wrap; gap: 6px;
     justify-content: flex-end;
   }
   .color-preset {
@@ -572,12 +591,7 @@
   }
   .color-preset.active { border-color: var(--text); transform: scale(1.1); }
 
-  .font-selector {
-    display: flex; flex-wrap: wrap; gap: 6px;
-    padding-top: 4px;
-    justify-content: flex-end;
-  }
-  .font-btn {
+  .font-btn, .bg-btn {
     padding: 6px 12px;
     background: var(--surface);
     border: 1px solid var(--border);
@@ -587,8 +601,8 @@
     cursor: pointer;
     transition: all .2s ease;
   }
-  .font-btn:hover { color: var(--text); border-color: var(--border-strong); }
-  .font-btn.active { color: var(--bg-0); background: var(--accent); border-color: var(--accent); font-weight: 600; }
+  .font-btn:hover, .bg-btn:hover { color: var(--text); border-color: var(--border-strong); }
+  .font-btn.active, .bg-btn.active { color: var(--bg-0); background: var(--accent); border-color: var(--accent); font-weight: 600; }
 
   .toggle-switch {
     width: 44px; height: 26px;
@@ -624,6 +638,9 @@
 </head>
 <body data-theme="dark">
 
+<!-- Слой фона (вектор) -->
+<div id="bgLayer" data-bg="stars"></div>
+
 <div id="app">
   <header>
     <div class="topbar">
@@ -634,12 +651,8 @@
           <line x1="17" y1="9" x2="23" y2="15"/>
         </svg>
       </button>
-      <div class="brand-logo" id="brandLogo" style="display:none;">
-        <svg viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="4" opacity=".4"/>
-          <circle cx="50" cy="50" r="10" fill="currentColor"/>
-          <path d="M50 40V18M50 60V82M40 50H18M60 50H82" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-        </svg>
+      <div class="brand-logo">
+        <img src="./icon-512.png" alt="" />
       </div>
       <h1>RADIOTELESCOPE</h1>
       <button class="topbar-btn" id="openSettingsBtn">НАСТРОЙКИ</button>
@@ -678,10 +691,6 @@
 </div>
 
 <footer id="siteFooter">
-  <div class="footer-row">
-    <span>Dev. 2026</span>
-    <a class="footer-author" href="https://github.com/SayanWolf" target="_blank" rel="noopener">©SayanWolf</a>
-  </div>
   <div id="playerControls">
     <div class="vol-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
@@ -697,6 +706,11 @@
       <button class="ctrl-btn" id="nextBtn" title="Следующая">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"/></svg>
       </button>
+      <button class="ctrl-btn heart-btn" id="heartBtn" title="В избранное">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </button>
       <button class="ctrl-btn eq-btn" id="eqBtn" title="Эквалайзер">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M8 20V4M12 20V14M16 20V8M20 20V12"/></svg>
       </button>
@@ -709,6 +723,10 @@
       </button>
     </div>
   </div>
+  <div class="footer-row">
+    <span>Dev. 2026</span>
+    <a class="footer-author" href="https://github.com/SayanWolf" target="_blank" rel="noopener">©SayanWolf</a>
+  </div>
 </footer>
 
 <div id="modalBackdrop">
@@ -719,27 +737,9 @@
 <script>
 /* ============== ДАННЫЕ ============== */
 const ALL_STATIONS = [
-  {
-    n: "Dub Ninja",
-    note: "Dub techno и эмбиент для фокуса",
-    genre: "Электронная",
-    country: "DE",
-    stream: "https://dub.ninja/live"
-  },
-  {
-    n: "EBM Radio",
-    note: "EBM, dark electro, industrial из Германии",
-    genre: "Электронная",
-    country: "DE",
-    stream: "https://stream.ebm-radio.org/hq"
-  },
-  {
-    n: "Frisky Radio",
-    note: "Подпольные электронные DJ-сеты с 2008",
-    genre: "Электронная",
-    country: "US",
-    stream: "https://stream.friskyradio.com/frisky_mp3_hi"
-  }
+  { n: "Dub Ninja", note: "Dub techno и эмбиент для фокуса", genre: "Электронная", country: "DE", stream: "https://dub.ninja/live" },
+  { n: "EBM Radio", note: "EBM, dark electro, industrial из Германии", genre: "Электронная", country: "DE", stream: "https://stream.ebm-radio.org/hq" },
+  { n: "Frisky Radio", note: "Подпольные электронные DJ-сеты с 2008", genre: "Электронная", country: "US", stream: "https://stream.friskyradio.com/frisky_mp3_hi" }
 ];
 
 const CATEGORIES = ["Все станции", "Избранное", "Электронная", "Рок", "Jazz", "Classical", "Каверы"];
@@ -756,6 +756,7 @@ const state = {
   accent: localStorage.getItem('rt_accent') || '#00E5FF',
   accent2: localStorage.getItem('rt_accent2') || '#7C3AED',
   font: localStorage.getItem('rt_font') || 'Inter',
+  bg: localStorage.getItem('rt_bg') || 'stars',
   saveEq: JSON.parse(localStorage.getItem('rt_save_eq') ?? (isMobile() ? 'true' : 'false')),
   favorites: JSON.parse(localStorage.getItem('rt_favorites') || '[]'),
   eqValues: JSON.parse(localStorage.getItem('rt_eq_values') || '{}'),
@@ -767,7 +768,7 @@ const state = {
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
 
-/* ============== ЦВЕТОВЫЕ ПРЕСЕТЫ ============== */
+/* ============== ЦВЕТА ============== */
 const COLOR_PRESETS = [
   { id: 'cyan',    c1: '#00E5FF', c2: '#7C3AED', name: 'Бирюзово-фиолетовый' },
   { id: 'violet',  c1: '#7C3AED', c2: '#A78BFA', name: 'Фиолетово-чёрный' },
@@ -776,6 +777,9 @@ const COLOR_PRESETS = [
   { id: 'pink',    c1: '#EC4899', c2: '#F59E0B', name: 'Розово-золотой' },
   { id: 'steel',   c1: '#3B82F6', c2: '#94A3B8', name: 'Сине-стальной' },
   { id: 'graph',   c1: '#EF4444', c2: '#6B7280', name: 'Красно-графитовый' },
+  { id: 'sunset',  c1: '#FF6B35', c2: '#F7C59F', name: 'Закат' },
+  { id: 'ocean',   c1: '#0EA5E9', c2: '#1E3A8A', name: 'Глубокий океан' },
+  { id: 'neon',    c1: '#22D3EE', c2: '#F472B6', name: 'Неон' },
 ];
 
 /* ============== ШРИФТЫ ============== */
@@ -787,7 +791,82 @@ const FONTS = [
   { id: 'JetBrains Mono', family: "'JetBrains Mono', monospace", loaded: false },
 ];
 
-/* ============== ПРИМЕНЕНИЕ ТЕМЫ/ШРИФТА ============== */
+/* ============== ФОНЫ (векторные SVG-паттерны) ============== */
+function getBgSvg(type) {
+  if (type === 'stars') {
+    // Звёздное поле: мелкие точки
+    const dots = [];
+    for (let i = 0; i < 60; i++) {
+      const x = (i * 137.5) % 100;
+      const y = (i * 73.3) % 100;
+      const r = (i % 3 === 0) ? 0.6 : 0.3;
+      dots.push(`<circle cx="${x}%" cy="${y}%" r="${r}%" fill="currentColor" opacity="${0.4 + (i % 4) * 0.15}"/>`);
+    }
+    return `<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="color:var(--accent)"><rect width="100%" height="100%" fill="transparent"/>${dots.join('')}</svg>`;
+  }
+  if (type === 'nebula') {
+    // Туманность: мягкие радиальные пятна
+    return `<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <radialGradient id="n1" cx="30%" cy="30%" r="50%">
+          <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="n2" cx="75%" cy="70%" r="50%">
+          <stop offset="0%" stop-color="var(--accent-2)" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="var(--accent-2)" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="n3" cx="50%" cy="100%" r="40%">
+          <stop offset="0%" stop-color="var(--accent-2)" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="var(--accent-2)" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#n1)"/>
+      <rect width="100%" height="100%" fill="url(#n2)"/>
+      <rect width="100%" height="100%" fill="url(#n3)"/>
+    </svg>`;
+  }
+  if (type === 'orbits') {
+    // Концентрические окружности
+    const circles = [];
+    for (let i = 1; i <= 6; i++) {
+      circles.push(`<circle cx="50%" cy="50%" r="${i * 8}%" fill="none" stroke="currentColor" stroke-width="0.15" opacity="${0.4 - i * 0.04}"/>`);
+    }
+    return `<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="color:var(--accent)"><rect width="100%" height="100%" fill="transparent"/>${circles.join('')}</svg>`;
+  }
+  if (type === 'waves') {
+    // Горизонтальные волны
+    return `<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 100 100" style="color:var(--accent)">
+      <defs>
+        <linearGradient id="wg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.2"/>
+          <stop offset="100%" stop-color="var(--accent-2)" stop-opacity="0.2"/>
+        </linearGradient>
+      </defs>
+      <path d="M0 30 Q25 20 50 30 T100 30 V100 H0 Z" fill="url(#wg)"/>
+      <path d="M0 55 Q25 45 50 55 T100 55 V100 H0 Z" fill="url(#wg)" opacity="0.6"/>
+      <path d="M0 80 Q25 70 50 80 T100 80 V100 H0 Z" fill="url(#wg)" opacity="0.4"/>
+    </svg>`;
+  }
+  return '';
+}
+
+const BG_OPTIONS = [
+  { id: 'stars', name: 'Звёзды' },
+  { id: 'nebula', name: 'Туманность' },
+  { id: 'orbits', name: 'Орбиты' },
+  { id: 'waves', name: 'Волны' },
+  { id: 'none', name: 'Откл. фон' },
+];
+
+function applyBg() {
+  const layer = $('#bgLayer');
+  layer.dataset.bg = state.bg;
+  layer.innerHTML = state.bg === 'none' ? '' : getBgSvg(state.bg);
+  localStorage.setItem('rt_bg', state.bg);
+}
+
+/* ============== ПРИМЕНЕНИЕ ============== */
 function applyTheme() {
   document.body.dataset.theme = state.theme;
   document.documentElement.style.setProperty('--accent', state.accent);
@@ -795,6 +874,7 @@ function applyTheme() {
   localStorage.setItem('rt_theme', state.theme);
   localStorage.setItem('rt_accent', state.accent);
   localStorage.setItem('rt_accent2', state.accent2);
+  applyBg();
 }
 
 function applyFont() {
@@ -824,18 +904,30 @@ function getStationsByCat(cat) {
 
 /* ============== ИЗБРАННОЕ ============== */
 function saveFavorites() { localStorage.setItem('rt_favorites', JSON.stringify(state.favorites)); }
+
 function toggleFavorite(name) {
   const idx = state.favorites.indexOf(name);
   if (idx === -1) state.favorites.push(name);
   else state.favorites.splice(idx, 1);
   saveFavorites();
+  updateHeartUI();
   if (state.activeCat === "Избранное") render();
+}
+
+function updateHeartUI() {
+  const btn = $('#heartBtn');
+  if (!btn) return;
+  if (state.currentStation && state.favorites.includes(state.currentStation.n)) {
+    btn.classList.add('on');
+  } else {
+    btn.classList.remove('on');
+  }
 }
 
 /* ============== РЕНДЕР ============== */
 const grid = $('#grid');
 
-function getStationInitial(name) {
+function getInitial(name) {
   return (name || '?').trim().charAt(0).toUpperCase();
 }
 
@@ -845,7 +937,7 @@ function createStationCard(s, index) {
   el.dataset.name = s.n;
   el.dataset.index = index;
   el.innerHTML = `
-    <div class="station-logo">${getStationInitial(s.n)}</div>
+    <div class="station-logo">${getInitial(s.n)}</div>
     <div class="station-info">
       <div class="station-name">${s.n}</div>
       <div class="station-note">${s.note || ''}</div>
@@ -887,7 +979,7 @@ function renderStations(list, emptyMsg) {
 
 function render() {
   const list = getStationsByCat(state.activeCat);
-  renderStations(list, state.activeCat === "Избранное" ? 'СПИСОК ПУСТ — ДОБАВЬТЕ СТАНЦИИ ПЛЮСИКОМ' : null);
+  renderStations(list, state.activeCat === "Избранное" ? 'СПИСОК ПУСТ — НАЖМИТЕ ♥ НА ТРЕКЕ' : null);
 }
 
 /* ============== ЧИПЫ ============== */
@@ -905,20 +997,15 @@ CATEGORIES.forEach(c => {
   chipsEl.appendChild(b);
 });
 
-$('#chipsLeft').addEventListener('click', () => {
-  chipsEl.scrollBy({ left: -150, behavior: 'smooth' });
-});
-$('#chipsRight').addEventListener('click', () => {
-  chipsEl.scrollBy({ left: 150, behavior: 'smooth' });
-});
+$('#chipsLeft').addEventListener('click', () => chipsEl.scrollBy({ left: -150, behavior: 'smooth' }));
+$('#chipsRight').addEventListener('click', () => chipsEl.scrollBy({ left: 150, behavior: 'smooth' }));
 
 /* ============== MUTE ============== */
 const muteBtnHeader = $('#muteBtnHeader');
 const muteBtnDesktop = $('#muteBtnDesktop');
 
 function updateMuteUI() {
-  const btns = [muteBtnHeader, muteBtnDesktop];
-  btns.forEach(btn => {
+  [muteBtnHeader, muteBtnDesktop].forEach(btn => {
     if (!btn) return;
     btn.classList.remove('active', 'muted');
     if (!state.currentStation || !state.playing) {
@@ -941,20 +1028,13 @@ function toggleMute() {
 muteBtnHeader.addEventListener('click', toggleMute);
 muteBtnDesktop.addEventListener('click', toggleMute);
 
-/* ============== ЛОГОТИП В ШАПКЕ (ДЕСКТОП) ============== */
-const brandLogo = $('#brandLogo');
-function updateBrandLogo() {
-  brandLogo.style.display = window.innerWidth >= 768 ? 'flex' : 'none';
-}
-window.addEventListener('resize', updateBrandLogo);
-updateBrandLogo();
-
 /* ============== ПЛЕЕР ============== */
 const audio = $('#audioEl');
 const playBtn = $('#playBtn');
 const playIcon = $('#playIcon');
 const prevBtn = $('#prevBtn');
 const nextBtn = $('#nextBtn');
+const heartBtn = $('#heartBtn');
 const volume = $('#volume');
 const playerControls = $('#playerControls');
 
@@ -981,35 +1061,29 @@ function initAudioGraph() {
     prev.connect(audioCtx.destination);
     applyEqGains();
   } catch (e) {
-    console.warn('Web Audio не инициализирован:', e);
+    console.warn('Web Audio:', e);
   }
 }
 
 function applyEqGains() {
   if (!eqFilters.length) return;
   EQ_FREQS.forEach((freq, i) => {
-    const v = state.eqValues[freq] || 0;
-    eqFilters[i].gain.value = v;
+    eqFilters[i].gain.value = state.eqValues[freq] || 0;
   });
 }
 
-function setPlayIcon(playing) {
-  if (playing) {
-    playIcon.innerHTML = '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>';
-  } else {
-    playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-  }
+const ICON_PLAY = '<path d="M8 5v14l11-7z"/>';
+const ICON_PAUSE = '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>';
+
+function setMainPlayIcon(playing) {
+  playIcon.innerHTML = playing ? ICON_PAUSE : ICON_PLAY;
 }
 
-function updateStationPlayBtn(el, playing) {
+function setStationPlayIcon(el, playing) {
   if (!el) return;
   const btn = el.querySelector('.station-play-btn');
   if (!btn) return;
-  if (playing) {
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>';
-  } else {
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
-  }
+  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor">${playing ? ICON_PAUSE : ICON_PLAY}</svg>`;
 }
 
 function selectStation(s, el, index) {
@@ -1018,6 +1092,7 @@ function selectStation(s, el, index) {
   state.currentStation = s;
   state.currentIndex = index;
 
+  audio.pause();
   audio.src = s.stream;
   audio.volume = parseFloat(volume.value) / 100;
   audio.muted = state.muted;
@@ -1025,19 +1100,20 @@ function selectStation(s, el, index) {
   if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
 
   playerControls.classList.add('show');
+  updateHeartUI();
 
   audio.play()
     .then(() => {
       state.playing = true;
-      setPlayIcon(true);
-      updateStationPlayBtn(el, true);
+      setMainPlayIcon(true);
+      setStationPlayIcon(el, true);
       document.body.classList.add('is-playing');
       updateMuteUI();
     })
     .catch(err => {
-      console.warn('Ошибка воспроизведения:', err);
+      console.warn('play error:', err);
       state.playing = false;
-      setPlayIcon(false);
+      setMainPlayIcon(false);
       updateMuteUI();
     });
 }
@@ -1048,24 +1124,27 @@ function togglePlay() {
 
   if (state.playing) {
     audio.pause();
+    // Жёсткая остановка live-потока
+    if (audioCtx && audioCtx.state === 'running') audioCtx.suspend();
     state.playing = false;
-    setPlayIcon(false);
-    updateStationPlayBtn(activeEl, false);
+    setMainPlayIcon(false);
+    setStationPlayIcon(activeEl, false);
     document.body.classList.remove('is-playing');
     updateMuteUI();
   } else {
     if (audio.src) {
       initAudioGraph();
       if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      // Перезапуск потока — для live-радио нормально начинать с текущего момента
       audio.play()
         .then(() => {
           state.playing = true;
-          setPlayIcon(true);
-          updateStationPlayBtn(activeEl, true);
+          setMainPlayIcon(true);
+          setStationPlayIcon(activeEl, true);
           document.body.classList.add('is-playing');
           updateMuteUI();
         })
-        .catch(err => console.warn('Ошибка play:', err));
+        .catch(err => console.warn('play error:', err));
     }
   }
 }
@@ -1073,7 +1152,7 @@ function togglePlay() {
 function playRelative(delta) {
   const list = state.currentList;
   if (!list.length) return;
-  let newIdx = (state.currentIndex + delta + list.length) % list.length;
+  const newIdx = (state.currentIndex + delta + list.length) % list.length;
   const s = list[newIdx];
   const el = grid.querySelector(`.station[data-name="${CSS.escape(s.n)}"]`);
   if (el) selectStation(s, el, newIdx);
@@ -1082,6 +1161,10 @@ function playRelative(delta) {
 playBtn.addEventListener('click', togglePlay);
 prevBtn.addEventListener('click', () => playRelative(-1));
 nextBtn.addEventListener('click', () => playRelative(1));
+
+heartBtn.addEventListener('click', () => {
+  if (state.currentStation) toggleFavorite(state.currentStation.n);
+});
 
 volume.addEventListener('input', () => {
   audio.volume = parseFloat(volume.value) / 100;
@@ -1124,15 +1207,11 @@ eqBtn.addEventListener('click', (e) => {
 
 document.querySelectorAll('#eqSliders input').forEach(input => {
   const freq = input.dataset.freq;
-  if (state.eqValues[freq] !== undefined) {
-    input.value = state.eqValues[freq];
-  }
+  if (state.eqValues[freq] !== undefined) input.value = state.eqValues[freq];
   input.addEventListener('input', () => {
     state.eqValues[freq] = parseInt(input.value);
     applyEqGains();
-    if (state.saveEq) {
-      localStorage.setItem('rt_eq_values', JSON.stringify(state.eqValues));
-    }
+    if (state.saveEq) localStorage.setItem('rt_eq_values', JSON.stringify(state.eqValues));
     resetEqTimer();
   });
 });
@@ -1197,6 +1276,12 @@ function getModalContent(type) {
           </div>
         </div>
         <div class="settings-row">
+          <div class="settings-label"><span>Фон</span><small>Векторный узор</small></div>
+          <div class="bg-selector">
+            ${BG_OPTIONS.map(b => `<button class="bg-btn ${state.bg===b.id?'active':''}" data-bg="${b.id}">${b.name}</button>`).join('')}
+          </div>
+        </div>
+        <div class="settings-row">
           <div class="settings-label"><span>Сохранять эквалайзер</span><small>Между сессиями</small></div>
           <div class="toggle-switch ${state.saveEq?'on':''}" id="saveEqToggle"></div>
         </div>
@@ -1214,7 +1299,6 @@ function openModal(type) {
   if (!c) return;
   modal.innerHTML = `<div class="modal-title">${c.title}</div><div class="modal-body">${c.html}</div>`;
   modalBackdrop.classList.add('show');
-
   modal.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
 
   if (type === 'settings') {
@@ -1243,6 +1327,14 @@ function openModal(type) {
         applyFont();
       });
     });
+    modal.querySelectorAll('.bg-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        modal.querySelectorAll('.bg-btn').forEach(x => x.classList.remove('active'));
+        btn.classList.add('active');
+        state.bg = btn.dataset.bg;
+        applyBg();
+      });
+    });
     const toggle = modal.querySelector('#saveEqToggle');
     if (toggle) {
       toggle.addEventListener('click', () => {
@@ -1265,7 +1357,6 @@ function openModal(type) {
 
 function closeModal() { modalBackdrop.classList.remove('show'); }
 modalBackdrop.addEventListener('click', e => { if (e.target === modalBackdrop) closeModal(); });
-
 $('#openSettingsBtn').addEventListener('click', () => openModal('settings'));
 
 /* ============== ИНИЦИАЛИЗАЦИЯ ============== */
@@ -1273,12 +1364,11 @@ render();
 applyTheme();
 applyFont();
 updateMuteUI();
+updateHeartUI();
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js').catch(err => {
-      console.warn('SW registration failed:', err);
-    });
+    navigator.serviceWorker.register('./service-worker.js').catch(err => console.warn('SW:', err));
   });
 }
 </script>
