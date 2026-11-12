@@ -248,11 +248,12 @@ body[data-theme="light"] #bgLayer { opacity: 0.7; }
   --pulse: 1;
   box-shadow:
     0 0 0 1px var(--accent),
-    0 0 calc(10px + 16px * var(--pulse)) var(--accent),
+    0 0 calc(6px + 34px * var(--pulse)) var(--accent),
+    0 0 calc(20px + 60px * var(--pulse)) color-mix(in srgb, var(--accent) 30%, transparent),
     0 8px 24px rgba(0,0,0,.4);
   transform: scale(1.02);
   padding: 16px 16px;
- }
+}
 
   .station-logo {
     width: 42px; height: 42px;
