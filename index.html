@@ -1124,7 +1124,7 @@ function initAudioGraph() {
 }
 
 function startPulse() {
-  if (!analyser) return;
+  if (!analyser || !state.pulseOn) return;
   if (pulseRaf) cancelAnimationFrame(pulseRaf);
 
   function draw() {
@@ -1132,14 +1132,27 @@ function startPulse() {
     let bassSum = 0;
     for (let i = 0; i < 4; i++) bassSum += vizData[i] || 0;
     const bassAvg = bassSum / 4;
-    const rawPulse = 0.4 + (bassAvg / 255) * 0.6;
-    // Сглаживание, чтобы не дёргалось
-    smoothPulse = smoothPulse * 0.85 + rawPulse * 0.15;
+
+    // Интенсивность: чем больше state.pulseIntensity, тем шире диапазон
+    const minPulse = 1 - state.pulseIntensity * 0.6;
+    const rawPulse = minPulse + (bassAvg / 255) * (1 - minPulse);
+
+    // Сглаживание: чем больше state.pulseSmooth, тем плавнее
+    const s = state.pulseSmooth;
+    smoothPulse = smoothPulse * s + rawPulse * (1 - s);
+
     const activeEl = document.querySelector('.station.active');
     if (activeEl) activeEl.style.setProperty('--pulse', smoothPulse.toFixed(2));
     pulseRaf = requestAnimationFrame(draw);
   }
   draw();
+}
+
+function stopPulse() {
+  if (pulseRaf) { cancelAnimationFrame(pulseRaf); pulseRaf = null; }
+  smoothPulse = 1;
+  const activeEl = document.querySelector('.station.active');
+  if (activeEl) activeEl.style.setProperty('--pulse', '1');
 }
 
 function stopPulse() {
