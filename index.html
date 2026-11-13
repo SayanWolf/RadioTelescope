@@ -655,14 +655,18 @@ body[data-theme="light"] #bgLayer { opacity: 0.7; }
     font-variant-numeric: tabular-nums;
   }
 
-  @media (max-width: 400px) {
-    .eq-sliders { padding: 12px 10px 10px; gap: 4px; }
-    .eq-band input[type=range] { height: 70px; }
-    .eq-label { font-size: 9px; }
-    .topbar h1 { font-size: 15px; letter-spacing: 1px; }
-    .ctrl-btns { gap: 3px; }
-    .ctrl-btn { width: 32px; height: 32px; }
-    .ctrl-btn.play-main { width: 38px; height: 38px; }
+  @media (max-width: 767px) {
+    .eq-sliders { padding: 16px 12px 14px; gap: 8px; }
+    .eq-band input[type=range] { height: 120px; width: 10px; }
+    .eq-band input[type=range]::-webkit-slider-thumb {
+      width: 24px; height: 24px;
+      margin-left: -7px;
+    }
+    .eq-band input[type=range]::-moz-range-thumb {
+      width: 24px; height: 24px;
+    }
+    .eq-label { font-size: 11px; }
+    .eq-band .eq-label { margin-bottom: 2px; }
   }
 </style>
 </head>
@@ -1180,11 +1184,13 @@ function startPulse() {
     for (let i = 0; i < 4; i++) bassSum += vizData[i] || 0;
     const bassAvg = bassSum / 4;
 
-    // Интенсивность: чем больше state.pulseIntensity, тем шире диапазон
-    const minPulse = 1 - state.pulseIntensity * 0.6;
-    const rawPulse = minPulse + (bassAvg / 255) * (1 - minPulse);
+    // Линейный отклик на бас (громкий бас даёт максимум)
+    const bassNorm = bassAvg / 255;
+    // Диапазон: при интенсивности 100% минимум падает до 0.1
+    const minPulse = 1 - state.pulseIntensity * 0.9;
+    const rawPulse = minPulse + bassNorm * (1 - minPulse);
 
-    // Сглаживание: чем больше state.pulseSmooth, тем плавнее
+    // Сглаживание из настроек
     const s = state.pulseSmooth;
     smoothPulse = smoothPulse * s + rawPulse * (1 - s);
 
@@ -1230,7 +1236,13 @@ function setStationPlayIcon(el, playing) {
 }
 
 function selectStation(s, el, index) {
-  $$('.station').forEach(x => x.classList.remove('active'));
+  // Сбрасываем иконку у всех карточек, кроме новой
+  $$('.station').forEach(x => {
+    if (x !== el) {
+      x.classList.remove('active');
+      setStationPlayIcon(x, false);
+    }
+  });
   el.classList.add('active');
   state.currentStation = s;
   state.currentIndex = index;
