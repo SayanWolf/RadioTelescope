@@ -468,6 +468,29 @@ body[data-theme="light"] #bgLayer { opacity: 0.7; }
     padding: 16px 16px 12px;
     gap: 6px;
   }
+    .eq-footer {
+    padding: 0 16px 12px;
+    display: flex;
+    justify-content: center;
+  }
+  .eq-hide-btn {
+    padding: 8px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text-dim);
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+  .eq-hide-btn:hover {
+    color: var(--text);
+    background: var(--surface-hover);
+    border-color: var(--border-strong);
+  }
   .eq-band {
     flex: 1;
     display: flex; flex-direction: column;
@@ -657,7 +680,7 @@ body[data-theme="light"] #bgLayer { opacity: 0.7; }
 
   @media (max-width: 767px) {
     .eq-sliders { padding: 16px 12px 14px; gap: 8px; }
-    .eq-band input[type=range] { height: 120px; width: 10px; }
+    .eq-band input[type=range] { height: 132px; width: 10px; }
     .eq-band input[type=range]::-webkit-slider-thumb {
       width: 24px; height: 24px;
       margin-left: -7px;
@@ -711,6 +734,14 @@ body[data-theme="light"] #bgLayer { opacity: 0.7; }
   <div class="eq-header">
     <span>ЭКВАЛАЙЗЕР</span>
     <button class="eq-reset" id="eqReset">СБРОС</button>
+  </div>
+  <div class="eq-sliders" id="eqSliders">
+    ...
+  </div>
+  <div class="eq-footer">
+    <button class="eq-hide-btn" id="eqHideBtn">Скрыть</button>
+  </div>
+</div>
   </div>
   <div class="eq-sliders" id="eqSliders">
     <div class="eq-band"><span class="eq-label">60</span><input type="range" min="-12" max="12" value="0" data-freq="60"></div>
@@ -1361,6 +1392,10 @@ eqBtn.addEventListener('click', (e) => {
   e.stopPropagation();
   if (eqPanel.classList.contains('show')) closeEq();
   else openEq();
+});
+  $('#eqHideBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeEq();
 });
 
 document.querySelectorAll('#eqSliders input').forEach(input => {
