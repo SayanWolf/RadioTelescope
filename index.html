@@ -818,11 +818,32 @@ const ALL_STATIONS = [
     stream: "https://jazz-radio-afro.ice.infomaniak.ch/jazz-radio-afro.mp3" 
   },
   { 
-    n: "Adroit Jazz Underground", 
-    note: "Авангардный и современный джаз из Нью-Йорка", 
-    genre: "Jazz", 
-    country: "US", 
-    stream: "https://icecast.walmradio.com:8443/jazz" 
+    n: "HearMe - Classic Hard Rock", 
+    note: "Классический хард-рок", 
+    genre: "Рок", 
+    country: "GB", 
+    stream: "https://radio.hearme.fm:8250/stream" 
+  },
+  { 
+    n: "Absolute Classic Rock", 
+    note: "Легендарный классический рок", 
+    genre: "Рок", 
+    country: "GB", 
+    stream: "https://ais.absoluteradio.co.uk/absoluteclassicrockhigh.aac" 
+  },
+    { 
+    n: "Радио Романтика", 
+    note: "Лирические хиты и каверы для души", 
+    genre: "Каверы", 
+    country: "RU", 
+    stream: "https://hls-01-gpm.hostingradio.ru/romantika495/playlist.m3u8" 
+  },
+    { 
+    n: "Лёгкое радио", 
+    note: "House, Deep, Lounge и Lo-fi — идеальный фон для работы", 
+    genre: "", 
+    country: "RU", 
+    stream: "https://stream.audiodiz.ru/listen/light/radio" 
   },
   { 
     n: "Frisky Radio",
@@ -838,6 +859,90 @@ const ALL_STATIONS = [
     country: "FR", 
     stream: "https://listen.radioking.com/radio/105610/stream/144949" 
   },
+    { 
+    n: "Радио Искатель", 
+    note: "Русский рок, классика и музыка для путешествий", 
+    genre: "Рок", 
+    country: "RU", 
+    stream: "https://iskatel.hostingradio.ru:8015/iskatel-128.mp3" 
+  },
+   { 
+    n: "Радио PREMIUM", 
+    note: "Стильная музыка без жанровых рамок", 
+    genre: "Каверы", 
+    country: "RU", 
+    stream: "https://hls.rpfm.ru/rpfm/playlist.m3u8" 
+  },
+    { 
+    n: "Радио Шоколад", 
+    note: "Первый в мире FM-кавер-радио: любимые хиты в неожиданном исполнении", 
+    genre: "Каверы", 
+    country: "RU", 
+    stream: "https://choco.hostingradio.ru:10010/fm" 
+  },
+    { 
+    n: "Русский Рок", 
+    note: "Русский рок всех времён", 
+    genre: "Рок", 
+    country: "RU", 
+    stream: "https://rock.amgradio.ru/rusrock.aacp" 
+  },
+    { 
+    n: "Радио Монте-Карло", 
+    note: "Лучшие зарубежные хиты последних десятилетий", 
+    genre: "Рок", 
+    country: "RU", 
+    stream: "https://montecarlo.hostingradio.ru/montecarlo96.aacp" 
+  },
+    { 
+    n: "Radio Cafe", 
+    note: "Джаз, босса-нова и лёгкая музыка для кофе", 
+    genre: "Jazz", 
+    country: "RU", 
+    stream: "https://cafe.amgradio.ru/cafe.aacp" 
+  },
+    { 
+    n: "Радио Атмосфера", 
+    note: "Lounge, downtempo и джаз для работы и отдыха", 
+    genre: "Jazz", 
+    country: "RU", 
+    stream: "https://listen10.myradio24.com/atmo" 
+  },
+  { 
+    n: "Хорошее радио", 
+    note: "Спокойная и позитивная музыка", 
+    genre: "Рок", 
+    country: "RU", 
+    stream: "https://hr.amgradio.ru/horoshee.aacp" 
+  },
+   { 
+    n: "Wild 94.3", 
+    note: "Кантри из Аляски", 
+    genre: "Рок", 
+    country: "US", 
+    stream: "https://ice8.securenetsystems.net/KWDD" 
+  },
+    { 
+    n: "Cruisin Country 93.5", 
+    note: "Кантри из Мэна", 
+    genre: "Рок", 
+    country: "US", 
+    stream: "https://stream.radio.co/s4867e9e93/listen" 
+  },
+  { 
+    n: "KOKE 99.3 & 98.5 FM", 
+    note: "Американа и кантри из Остина, Техас", 
+    genre: "Рок", 
+    country: "US", 
+    stream: "https://arn.leanstream.co/KOKEFM" 
+  },
+  { 
+    n: "TheEL.US - America's Rock Station", 
+    note: "Классический рок, блюз и хард-рок из Флориды", 
+    genre: "Рок", 
+    country: "US", 
+    stream: "https://streaming.live365.com/a71722" 
+  },
   {
     n: "Dr. Dick's Dub Shack", 
     note: "Даб, downtempo и бас из Бермуд", 
@@ -847,7 +952,7 @@ const ALL_STATIONS = [
   }
 ];
 
-const CATEGORIES = ["Все станции", "Избранное", "Электронная", "Рок", "Jazz", "Classical", "Каверы"];
+const CATEGORIES = ["Все станции", "Избранное", "Электронная", "Рок", "Jazz", "Classical", "Кантри", "Каверы"];
 
 /* ============== СОСТОЯНИЕ ============== */
 const isMobile = () => window.innerWidth < 768;
