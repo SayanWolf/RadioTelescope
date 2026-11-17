@@ -239,9 +239,10 @@ body[data-theme="light"] #bgLayer { opacity: 0.7; }
   }
   .station:hover { background: var(--surface-hover); border-color: var(--border-strong); }
   body.is-playing .station:not(.active) { opacity: 0.4; }
- .station.active {
+.station.active {
   position: sticky;
   top: 0;
+  bottom: 36px;
   z-index: 20;
   background: var(--bg-1);
   border-color: var(--accent);
@@ -253,6 +254,9 @@ body[data-theme="light"] #bgLayer { opacity: 0.7; }
     0 8px 24px rgba(0,0,0,.4);
   transform: scale(1.02);
   padding: 16px 16px;
+}
+body.is-playing .station.active {
+  bottom: 92px;
 }
 
   .station-logo {
@@ -692,6 +696,7 @@ body[data-theme="light"] #bgLayer { opacity: 0.7; }
     .eq-band .eq-label { margin-bottom: 2px; }
   }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js"></script>
 </head>
 <body data-theme="dark">
 
@@ -820,7 +825,7 @@ const ALL_STATIONS = [
   { 
     n: "Relax FM", 
     note: "Спокойная музыка и легкий лаунж без суеты", 
-    genre: "Лаунж", 
+    genre: "Чилаут", 
     country: "RU", 
     stream: "https://hls-01-gpm.hostingradio.ru/relaxfm495/playlist.m3u8" 
   },
@@ -862,7 +867,7 @@ const ALL_STATIONS = [
     { 
     n: "Лёгкое радио", 
     note: "House, Deep, Lounge и Lo-fi — идеальный фон для работы", 
-    genre: "", 
+    genre: "Чилаут", 
     country: "RU", 
     stream: "https://stream.audiodiz.ru/listen/light/radio" 
   },
@@ -925,7 +930,7 @@ const ALL_STATIONS = [
     { 
     n: "Радио Атмосфера", 
     note: "Lounge, downtempo и джаз для работы и отдыха", 
-    genre: "Jazz", 
+    genre: "Чилаут", 
     country: "RU", 
     stream: "https://listen10.myradio24.com/atmo" 
   },
@@ -970,13 +975,13 @@ const ALL_STATIONS = [
     genre: "Электронная", 
     country: "BM", 
     stream: "https://streamer.radio.co/s0635c8b0d/listen" 
-  }
+  },
   { 
     n: "Comedy Radio", 
     note: "Юмористическое разговорное шоу, стендап и актуальная музыка", 
     genre: "Юмор", 
     country: "RU", 
-    stream: "https://hostingradio.ru" 
+    stream: "https://hls-01-gpm.hostingradio.ru/comedyradio495/playlist.m3u8" 
   },
   { 
     n: "Радио MAXIMUM", 
@@ -988,13 +993,13 @@ const ALL_STATIONS = [
     { 
     n: "[RCM] DEEP", 
     note: "Глубокая и чувственная электронная музыка: Deep House, Nu Disco и Chillout", 
-    genre: "Электронная", 
+    genre: "Чилаут", 
     country: "RU", 
-    stream: "https://getradio.me" 
+    stream: "https://c.getradio.me/rcmdeep/stream" 
   },
 ];
 
-const CATEGORIES = ["Все станции", "Избранное", "Электронная", "Рок", "Jazz", "Classical", "Кантри", "Каверы"];
+const CATEGORIES = ["Все станции", "Избранное", "Электронная", "Рок", "Jazz", "Чилаут", "Classical", "Кантри", "Каверы"];
 
 /* ============== СОСТОЯНИЕ ============== */
 const isMobile = () => window.innerWidth < 768;
@@ -1018,6 +1023,7 @@ const state = {
   eqCloseTimer: null,
   currentList: [],
   currentIndex: -1,
+  hlsInstance: null,
 };
 
 const $ = (s) => document.querySelector(s);
@@ -1420,7 +1426,43 @@ function selectStation(s, el, index) {
   state.currentIndex = index;
 
   audio.pause();
-  audio.src = s.stream;
+   if (state.hlsInstance) {
+    state.hlsInstance.destroy();
+    state.hlsInstance = null;
+  }
+
+     const startPlayback = () => {
+    audio.play()
+      .then(() => {
+        state.playing = true;
+        setMainPlayIcon(true);
+        setStationPlayIcon(el, true);
+        document.body.classList.add('is-playing');
+        updateMuteUI();
+        startPulse();
+      })
+      .catch(err => {
+        console.warn('play error:', err);
+        state.playing = false;
+        setMainPlayIcon(false);
+        updateMuteUI();
+      });
+  };
+
+  if (s.stream.includes('.m3u8')) {
+    if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+      state.hlsInstance = new Hls();
+      state.hlsInstance.loadSource(s.stream);
+      state.hlsInstance.attachMedia(audio);
+      state.hlsInstance.on(Hls.Events.MANIFEST_PARSED, startPlayback);
+    } else if (audio.canPlayType('application/vnd.apple.mpegurl')) {
+      audio.src = s.stream;
+      startPlayback();
+    }
+  } else {
+    audio.src = s.stream;
+  }
+
   audio.volume = parseFloat(volume.value) / 100;
   audio.muted = state.muted;
   initAudioGraph();
@@ -1429,22 +1471,11 @@ function selectStation(s, el, index) {
   playerControls.classList.add('show');
   updateHeartUI();
 
-  audio.play()
-    .then(() => {
-      state.playing = true;
-      setMainPlayIcon(true);
-      setStationPlayIcon(el, true);
-      document.body.classList.add('is-playing');
-      updateMuteUI();
-      startPulse();
-    })
-    .catch(err => {
-      console.warn('play error:', err);
-      state.playing = false;
-      setMainPlayIcon(false);
-      updateMuteUI();
-    });
+  if (!s.stream.includes('.m3u8')) {
+    startPlayback();
+  }
 }
+
 
 function togglePlay() {
   if (!state.currentStation) return;
