@@ -435,7 +435,7 @@ body[data-theme="light"] #bgLayer { opacity: 0.7; }
     transition: transform .35s cubic-bezier(.22,1,.36,1);
     max-height: 0;
     overflow: hidden;
-    padding-bottom: 45px; /* чтобы не перекрывать подвал */
+    padding-bottom: 40px; /* чтобы не перекрывать подвал */
   }
   #eqPanel.show {
     transform: translateY(0);
@@ -811,6 +811,20 @@ const ALL_STATIONS = [
     stream: "https://stream-mixtape-geo.ntslive.net/mixtape3" 
   },
   { 
+    n: "ZHUKOV FM", 
+    note: "Отборная электронная музыка и новинки в стиле Deep House", 
+    genre: "Электронная", 
+    country: "RU", 
+    stream: "https://zhukov-fm.ru:1045/stream" 
+  },
+  { 
+    n: "Relax FM", 
+    note: "Спокойная музыка и легкий лаунж без суеты", 
+    genre: "Лаунж", 
+    country: "RU", 
+    stream: "https://hls-01-gpm.hostingradio.ru/relaxfm495/playlist.m3u8" 
+  },
+  { 
     n: "Jazz Radio - Afro Jazz", 
     note: "Афро-джаз из Франции", 
     genre: "Jazz", 
@@ -823,6 +837,13 @@ const ALL_STATIONS = [
     genre: "Рок", 
     country: "GB", 
     stream: "https://radio.hearme.fm:8250/stream" 
+  },
+  { 
+    n: "Эльдорадио", 
+    note: "Зарубежные хиты 80-х, 90-х, 2000-х и лучшие современные треки", 
+    genre: "Поп", 
+    country: "RU", 
+    stream: "https://emgspb.hostingradio.ru/eldoradio128.mp3" 
   },
   { 
     n: "Absolute Classic Rock", 
@@ -950,6 +971,27 @@ const ALL_STATIONS = [
     country: "BM", 
     stream: "https://streamer.radio.co/s0635c8b0d/listen" 
   }
+  { 
+    n: "Comedy Radio", 
+    note: "Юмористическое разговорное шоу, стендап и актуальная музыка", 
+    genre: "Юмор", 
+    country: "RU", 
+    stream: "https://hostingradio.ru" 
+  },
+  { 
+    n: "Радио MAXIMUM", 
+    note: "Современный рок, альтернатива, инди и классика мировой рок-музыки", 
+    genre: "Рок", 
+    country: "RU", 
+    stream: "https://maximum.hostingradio.ru/maximum128.mp3" 
+  },
+    { 
+    n: "[RCM] DEEP", 
+    note: "Глубокая и чувственная электронная музыка: Deep House, Nu Disco и Chillout", 
+    genre: "Электронная", 
+    country: "RU", 
+    stream: "https://getradio.me" 
+  },
 ];
 
 const CATEGORIES = ["Все станции", "Избранное", "Электронная", "Рок", "Jazz", "Classical", "Кантри", "Каверы"];
