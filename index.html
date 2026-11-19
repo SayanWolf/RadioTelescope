@@ -840,7 +840,7 @@ const ALL_STATIONS = [
     note: "Классический хард-рок", 
     genre: "Рок", 
     country: "GB", 
-    stream: "https://https://radio.hearme.fm:8250/stream" 
+    stream: "https://radio.hearme.fm:8250/stream" 
   },
   { 
     n: "Эльдорадио", 
@@ -1369,13 +1369,6 @@ function startPulse() {
     pulseRaf = requestAnimationFrame(draw);
   }
   draw();
-}
-
-function stopPulse() {
-  if (pulseRaf) { cancelAnimationFrame(pulseRaf); pulseRaf = null; }
-  smoothPulse = 1;
-  const activeEl = document.querySelector('.station.active');
-  if (activeEl) activeEl.style.setProperty('--pulse', '1');
 }
 
 function stopPulse() {
