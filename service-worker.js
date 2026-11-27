@@ -4,8 +4,8 @@
 // - навигация (index.html) → NetworkFirst с offline fallback
 // - статика (CSS, JS, шрифты, иконки, manifest) → CacheFirst (быстро и стабильно)
 
-const CACHE_STATIC = "rt-static-v1";      // статические ресурсы
-const CACHE_DYNAMIC = "rt-dynamic-v1";    // сетевые запросы (stations.json, страницы)
+const CACHE_STATIC = "rt-static-v2";      // статические ресурсы
+const CACHE_DYNAMIC = "rt-dynamic-v2";    // сетевые запросы (stations.json, страницы)
 const OFFLINE_PAGE = "offline.html";      // страница "нет интернета"
 
 // Ресурсы, которые кэшируются сразу при установке SW
