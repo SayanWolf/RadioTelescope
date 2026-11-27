@@ -247,21 +247,22 @@ main {
   }
   .station:hover { background: var(--surface-hover); border-color: var(--border-strong); }
   body.is-playing .station:not(.active) { opacity: 0.4; }
-  .station.active {
+ .station.active {
     position: sticky;
     top: 0;
-    bottom: calc(var(--footer-h) + 12px);
+    bottom: 0;
     z-index: 20;
     background: var(--bg-1);
     border-color: var(--accent);
     --pulse: 1;
     box-shadow:
-    0 0 0 1px var(--accent),
-    0 0 calc(6px + 34px * var(--pulse)) var(--accent),
-    0 0 calc(20px + 60px * var(--pulse)) color-mix(in srgb, var(--accent) 30%, transparent),
-    0 8px 24px rgba(0,0,0,.4);
+        0 0 0 1px var(--accent),
+        0 0 calc(6px + 34px * var(--pulse)) var(--accent),
+        0 0 calc(20px + 60px * var(--pulse)) color-mix(in srgb, var(--accent) 30%, transparent),
+        0 8px 24px rgba(0,0,0,.4);
     transform: scale(1.02);
     padding: 16px 16px;
+    margin-bottom: var(--footer-h);
 }
    .station-logo {
     width: 42px; height: 42px;
