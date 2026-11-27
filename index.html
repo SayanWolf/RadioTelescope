@@ -159,12 +159,13 @@ body[data-theme="light"] #bgLayer { opacity: 0.7; }
   }
   .topbar-btn:hover { background: var(--surface-hover); border-color: var(--border-strong); }
 
-/* ============== ЧИПЫ (стрелки навигации) ============== */
-const chipsEl = $('#chips');
-$('#chipsLeft').addEventListener('click', () => chipsEl.scrollBy({ left: -150, behavior: 'smooth' }));
-$('#chipsRight').addEventListener('click', () => chipsEl.scrollBy({ left: 150, behavior: 'smooth' }));
-
- .chips {
+.chips-wrap { 
+    display: flex; 
+    align-items: center; 
+    gap: 6px;
+    overflow: hidden;
+}
+.chips {
     flex: 1;
     display: flex;
     flex-wrap: nowrap;
@@ -1064,18 +1065,17 @@ function render() {
 /* ============== ЧИПЫ ============== */
 const chipsEl = $('#chips');
 CATEGORIES.forEach(c => {
-  const b = document.createElement('button');
-  b.className = 'chip' + (c === state.activeCat ? ' active' : '');
-  b.textContent = c;
-  b.addEventListener('click', () => {
-    $$('.chip').forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    state.activeCat = c;
-    render();
-  });
-  chipsEl.appendChild(b);
+    const b = document.createElement('button');
+    b.className = 'chip' + (c === state.activeCat ? ' active' : '');
+    b.textContent = c;
+    b.addEventListener('click', () => {
+        $$('.chip').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        state.activeCat = c;
+        render();
+    });
+    chipsEl.appendChild(b);
 });
-
 $('#chipsLeft').addEventListener('click', () => chipsEl.scrollBy({ left: -150, behavior: 'smooth' }));
 $('#chipsRight').addEventListener('click', () => chipsEl.scrollBy({ left: 150, behavior: 'smooth' }));
 
