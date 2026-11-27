@@ -159,22 +159,10 @@ body[data-theme="light"] #bgLayer { opacity: 0.7; }
   }
   .topbar-btn:hover { background: var(--surface-hover); border-color: var(--border-strong); }
 
-  /* ============ ЧИПЫ ============ */
-  .chips-wrap { display: flex; align-items: center; gap: 6px; }
-  .chips-arrow {
-    width: 28px; height: 28px;
-    flex: 0 0 28px;
-    border-radius: 50%;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    cursor: pointer;
-    display: none;
-    align-items: center; justify-content: center;
-    transition: all .2s ease;
-  }
-  .chips-arrow:hover { color: var(--text); border-color: var(--border-strong); }
-  .chips-arrow svg { width: 12px; height: 12px; }
+/* ============== ЧИПЫ (стрелки навигации) ============== */
+const chipsEl = $('#chips');
+$('#chipsLeft').addEventListener('click', () => chipsEl.scrollBy({ left: -150, behavior: 'smooth' }));
+$('#chipsRight').addEventListener('click', () => chipsEl.scrollBy({ left: 150, behavior: 'smooth' }));
 
   .chips {
     flex: 1;
@@ -800,279 +788,26 @@ body[data-theme="light"] #bgLayer { opacity: 0.7; }
 
 <audio id="audioEl" preload="none" crossorigin="anonymous"></audio>
 <script>
-/* ============== ДАННЫЕ ============== */
-const ALL_STATIONS = [
-  { 
-    n: "CodeRadio", 
-    note: "Музыка для программирования от freeCodeCamp", 
-    genre: "Электронная", 
-    country: "US", 
-    stream: "https://coderadio-admin-v2.freecodecamp.org/listen/coderadio/radio.mp3" 
-  },
-    { 
-    n: "Bolly FM", 
-    note: "Музыкальные композиции из индийских фильмов", 
-    genre: "Электронная", 
-    country: "IN", 
-    stream: "https://5.restream.one/1456_1" 
-  },
-  { 
-    n: "NTS - Expansions", 
-    note: "Экспериментальная электроника и эмбиент от NTS", 
-    genre: "Электронная", 
-    country: "GB", 
-    stream: "https://stream-mixtape-geo.ntslive.net/mixtape3?client=direct" 
-  },
-  { 
-    n: "ZHUKOV FM", 
-    note: "Отборная электронная музыка и новинки в стиле Deep House", 
-    genre: "Электронная", 
-    country: "RU", 
-    stream: "https://zhukov-fm.ru:1045/stream" 
-  },
-  { 
-    n: "Relax FM", 
-    note: "Спокойная музыка и легкий лаунж без суеты", 
-    genre: "Чилаут", 
-    country: "RU", 
-    stream: "https://hls-01-gpm.hostingradio.ru/relaxfm495/playlist.m3u8" 
-  },
-  { 
-    n: "Jazz Radio - Afro Jazz", 
-    note: "Афро-джаз из Франции", 
-    genre: "Jazz", 
-    country: "FR", 
-    stream: "https://jazz-radio-afro.ice.infomaniak.ch/jazz-radio-afro.mp3" 
-  },
-  { 
-    n: "HearMe - Classic Hard Rock", 
-    note: "Классический хард-рок", 
-    genre: "Рок", 
-    country: "GB", 
-    stream: "https://radio.hearme.fm:8250/stream" 
-  },
-    { 
-    n: "СВОЁFM | DEEP RADIO", // НАЙТИ ПОТОК НЕТ ПОТОКА ПОЧИНИТЬ
-    note: "Пока не работает :) Deep House без рекламы — круглосуточный прямой эфир", 
-    genre: "Электронная", 
-    country: "RU", 
-    stream: "https://getradio.me" 
-  },
-  { 
-    n: "Радио Фейхоа", 
-    note: "Независимое онлайн-радио: авторская музыка, живые беседы и программы о культуре и искусстве", 
-    genre: "Чилаут", 
-    country: "RU", 
-    stream: "https://listen9.myradio24.com/udmtuno" 
-  },
-  { 
-    n: "Baku Jazz Radio", 
-    note: "Джаз из Баку: сочетание классического звучания и азербайджанских музыкальных традиций", 
-    genre: "Jazz", 
-    country: "AZ", 
-    stream: "https://a9.asurahosting.com/listen/bakujazzredio/radio.mp3" 
-  },
-  { 
-    n: "Patrisamato Radio", 
-    note: "Авторский микс без слов: от инструментального хип-хопа и рока до техно, эмбиента и синтезаторов 80-х", 
-    genre: "Чилаут", 
-    country: "BA", 
-    stream: "https://patrisamato.com/listen/live/radio.mp3?play_token=57b758888e53db1df5a3154bee4a85ce&src=site&t=1795706724169" 
-  },
-   { 
-    n: "Radio Vitasta", 
-    note: "Индийская классическая музыка, ситар, табла и традиционный фолк", 
-    genre: "Чилаут", 
-    country: "IN", 
-    stream: "https://icecast.radiovitasta.in/stream.mp3" 
-  },
-  { 
-    n: "Эльдорадио", 
-    note: "Зарубежные хиты 80-х, 90-х, 2000-х и лучшие современные треки", 
-    genre: "Поп", 
-    country: "RU", 
-    stream: "https://emgspb.hostingradio.ru/eldoradio128.mp3" 
-  },
-  { 
-    n: "Absolute Classic Rock", 
-    note: "Легендарный классический рок", 
-    genre: "Рок", 
-    country: "GB", 
-    stream: "https://stream-mz.planetradio.co.uk/absoluteclassicrock.aac" 
-  },
-    { 
-    n: "Радио Романтика", 
-    note: "Лирические хиты и каверы для души", 
-    genre: "Каверы", 
-    country: "RU", 
-    stream: "https://hls-01-gpm.hostingradio.ru/romantika495/playlist.m3u8" 
-  },
-  { 
-    n: "SomaFM: Covers", 
-    note: "Только кавер-версии: знакомые хиты в неожиданных, редких и авторских аранжировках", 
-    genre: "Каверы", 
-    country: "US", 
-    stream: "https://ice5.somafm.com/covers-128-mp3" 
-  },
-    { 
-    n: "MANGORADIO", 
-    note: "Немецкое веб-радио из Майнца: современные чартовые хиты, поп и танцевальная музыка нон-стоп", 
-    genre: "Электронная", 
-    country: "DE", 
-    stream: "https://mangoradio.stream.laut.fm/mangoradio" 
-  },
-    { 
-    n: "Лёгкое радио", 
-    note: "House, Deep, Lounge и Lo-fi — идеальный фон для работы", 
-    genre: "Чилаут", 
-    country: "RU", 
-    stream: "https://stream.audiodiz.ru/listen/light/radio" 
-  },
-    { 
-    n: "Lofi", 
-    note: "Мягкие lo-fi биты, тёплый виниловый треск и спокойный чилхоп для работы, учёбы и отдыха", 
-    genre: "Чилаут", 
-    country: "DE", 
-    stream: "https://lofi.stream.laut.fm/lofi" 
-  },
-    { 
-    n: "Radio MiddleAges", 
-    note: "Средневековый фолк, менестрели, лютни, волынки и фолк-рок с атмосферой старинных ярмарок", 
-    genre: "Кантри", 
-    country: "DE", 
-    stream: "https://radio-middleages.stream.laut.fm/radio-middleages" 
-  },
-    { 
-    n: "Radio Mega-SunShine", 
-    note: "Поп, танцевальные хиты, европоп и шлягеры — лёгкая музыка для хорошего настроения", 
-    genre: "Электронная", 
-    country: "AT", 
-    stream: "https://mega-sunshine.stream.laut.fm/mega-sunshine" 
-  },
-  { 
-    n: "Frisky Radio",
-    note: "Подпольные электронные DJ-сеты с 2008",
-    genre: "Электронная",
-    country: "US",
-    stream: "https://stream.friskyradio.com/frisky_mp3_hi" 
-  },
-  {
-    n: "Badam Radio", 
-    note: "Даб, регги и дэнсхолл из Франции", 
-    genre: "Электронная", 
-    country: "FR", 
-    stream: "https://listen.radioking.com/radio/105610/stream/144949" 
-  },
-    { 
-    n: "Радио Искатель", 
-    note: "Русский рок, классика и музыка для путешествий", 
-    genre: "Рок", 
-    country: "RU", 
-    stream: "https://iskatel.hostingradio.ru:8015/iskatel-128.mp3" 
-  },
-   { 
-    n: "Радио PREMIUM", 
-    note: "Стильная музыка без жанровых рамок", 
-    genre: "Каверы", 
-    country: "RU", 
-    stream: "https://hls.rpfm.ru/rpfm/playlist.m3u8" 
-  },
-    { 
-    n: "Радио Шоколад", 
-    note: "Первый в мире FM-кавер-радио: любимые хиты в неожиданном исполнении", 
-    genre: "Каверы", 
-    country: "RU", 
-    stream: "https://choco.hostingradio.ru:10010/fm" 
-  },
-    { 
-    n: "Русский Рок", 
-    note: "Русский рок всех времён", 
-    genre: "Рок", 
-    country: "RU", 
-    stream: "https://rock.amgradio.ru/rusrock.aacp" 
-  },
-    { 
-    n: "Радио Монте-Карло", 
-    note: "Лучшие зарубежные хиты последних десятилетий", 
-    genre: "Рок", 
-    country: "RU", 
-    stream: "https://montecarlo.hostingradio.ru/montecarlo96.aacp" 
-  },
-    { 
-    n: "Radio Cafe", 
-    note: "Джаз, босса-нова и лёгкая музыка для кофе", 
-    genre: "Jazz", 
-    country: "RU", 
-    stream: "https://cafe.amgradio.ru/cafe.aacp" 
-  },
-    { 
-    n: "Радио Атмосфера", 
-    note: "Lounge, downtempo и джаз для работы и отдыха", 
-    genre: "Чилаут", 
-    country: "RU", 
-    stream: "https://listen10.myradio24.com/atmo" 
-  },
-  { 
-    n: "Хорошее радио", 
-    note: "Спокойная и позитивная музыка", 
-    genre: "Рок", 
-    country: "RU", 
-    stream: "https://hr.amgradio.ru/horoshee.aacp" 
-  },
-  { 
-    n: "Cruisin Country 93.5", 
-    note: "Кантри из Мэна", 
-    genre: "Рок", 
-    country: "US", 
-    stream: "https://stream.radio.co/s4867e9e93/listen" 
-  },
-  { 
-    n: "KOKE 99.3 & 98.5 FM", 
-    note: "Американа и кантри из Остина, Техас", 
-    genre: "Рок", 
-    country: "US", 
-    stream: "https://arn.leanstream.co/KOKEFM" 
-  },
-  { 
-    n: "TheEL.US - America's Rock Station", 
-    note: "Классический рок, блюз и хард-рок из Флориды", 
-    genre: "Рок", 
-    country: "US", 
-    stream: "https://streaming.live365.com/a71722" 
-  },
-  {
-    n: "Dr. Dick's Dub Shack", 
-    note: "Даб, downtempo и бас из Бермуд", 
-    genre: "Электронная", 
-    country: "BM", 
-    stream: "https://streamer.radio.co/s0635c8b0d/listen" 
-  },
-  { 
-    n: "Comedy Radio", 
-    note: "Юмористическое разговорное шоу, стендап и актуальная музыка", 
-    genre: "Юмор", 
-    country: "RU", 
-    stream: "https://hls-01-gpm.hostingradio.ru/comedyradio495/playlist.m3u8" 
-  },
-  { 
-    n: "Радио MAXIMUM", 
-    note: "Современный рок, альтернатива, инди и классика мировой рок-музыки", 
-    genre: "Рок", 
-    country: "RU", 
-    stream: "https://maximum.hostingradio.ru/maximum128.mp3" 
-  },
-    { 
-    n: "[RCM] DEEP", 
-    note: "Глубокая и чувственная электронная музыка: Deep House, Nu Disco и Chillout", 
-    genre: "Чилаут", 
-    country: "RU", 
-    stream: "https://h.getradio.me/rcmdeep/hls.m3u8" 
-  },
-];
 
-const CATEGORIES = ["Все станции", "Избранное", "Электронная", "Рок", "Jazz", "Чилаут", "Classical", "Кантри", "Каверы"];
+  /* ============== ДАННЫЕ (загружаются из stations.json) ============== */
+let ALL_STATIONS = [];
+let CATEGORIES = [];
 
-/* ============== СОСТОЯНИЕ ============== */
+async function loadStations() {
+  try {
+    const res = await fetch('./stations.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    ALL_STATIONS = data.stations || [];
+    CATEGORIES = data.categories || [];
+  } catch (e) {
+    console.error('Не удалось загрузить stations.json:', e);
+    // Фолбэк — пустые массивы, чтобы сайт не падал
+    ALL_STATIONS = [];
+    CATEGORIES = ["Все станции", "Избранное"];
+  }
+}
+  /* ============== СОСТОЯНИЕ ============== */
 const isMobile = () => window.innerWidth < 768;
 
 const state = {
@@ -1840,13 +1575,31 @@ modalBackdrop.addEventListener('click', e => { if (e.target === modalBackdrop) c
 $('#openSettingsBtn').addEventListener('click', () => openModal('settings'));
 
 /* ============== ИНИЦИАЛИЗАЦИЯ ============== */
-render();
 applyTheme();
 applyFont();
 updateMuteUI();
 updateHeartUI();
 
-  // Измеряем высоту подвала и пишем в CSS-переменную
+// Сначала грузим список станций, потом рендерим
+loadStations().then(() => {
+  // Пересоздаём чипы категорий после загрузки данных
+  chipsEl.innerHTML = '';
+  CATEGORIES.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'chip' + (c === state.activeCat ? ' active' : '');
+    b.textContent = c;
+    b.addEventListener('click', () => {
+      $$('.chip').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      state.activeCat = c;
+      render();
+    });
+    chipsEl.appendChild(b);
+  });
+  render();
+});
+
+// Измеряем высоту подвала и пишем в CSS-переменную
 function updateFooterHeight() {
   const footer = document.getElementById('siteFooter');
   if (!footer) return;
